@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.Categoria;
 import bean.Genero;
-import dao.CategoriaDAO;
+import dao.CategoriaDao;
 import dao.DataSource;
 import dao.GeneroDao;
 
@@ -43,7 +43,7 @@ public class CategoriaServ extends HttpServlet {
 		//String nome = request.getParameter("nome");	
 		
 		DataSource dataSource = new DataSource();
-		CategoriaDAO categoriaDao = new CategoriaDAO(dataSource);
+		CategoriaDao categoriaDao = new CategoriaDao(dataSource);
 				
 		// Cria um novo Genero
 		//Genero genero = new Genero();
@@ -51,7 +51,7 @@ public class CategoriaServ extends HttpServlet {
 		//genero.setNome(nome);
 		
 		// Le todos os Generos
-		ArrayList<Categoria> categorias = categoriaDao.readAll();			
+		ArrayList<Categoria> categorias = categoriaDao.selectAll();			
 		request.setAttribute("categorias", categorias);
 		request.getRequestDispatcher("/WEB-INF/paginas/categorias.jsp").forward(request, response);
 	}

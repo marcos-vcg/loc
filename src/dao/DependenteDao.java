@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import bean.Dependente;
 import bean.Grau;
 
-public class DependenteDAO {
+public class DependenteDao {
 	private DataSource datasource;
-	private ClienteDAO clienteDao; 
+	private ClienteDao clienteDao; 
 	private String tabela;
 	
-	public DependenteDAO(DataSource datasource){
+	public DependenteDao(DataSource datasource){
 		this.datasource = datasource;
-		this.clienteDao = new ClienteDAO(datasource);
+		this.clienteDao = new ClienteDao(datasource);
 		this.tabela = "dependente";
 	}
 	

@@ -6,30 +6,34 @@ import java.util.ArrayList;
 
 import bean.Filme;
 
-public class FilmeDAO {
+public class FilmeDao {
 	private DataSource dataSource;
 	private String tabela;
 	private GeneroDao generoDao;
-	private CategoriaDAO categoriaDao;
+	private CategoriaDao categoriaDao;
 	
-	public FilmeDAO(DataSource datasource){
+	public FilmeDao(DataSource datasource){
 		this.dataSource = datasource;
 		this.tabela = "filme";
 		generoDao = new GeneroDao(dataSource);
-		categoriaDao = new CategoriaDAO(dataSource);
+		categoriaDao = new CategoriaDao(dataSource);
 	}
 	
 	
-	public Filme busca(Integer id){
+	public Filme select(Integer id){
+		
+		Filme filme = null;
+		
 		try {
-			String SQL = "SELECT * FROM " + tabela + " WHERE id = '" + id + "';";
+			String SQL = "SELECT * FROM " + tabela + " WHERE id = ?;";
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
-			ResultSet rs = ps.executeQuery();
 			
-			Filme filme = new Filme();
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
 				
+				filme = new Filme();
 				filme.setId(rs.getInt("id"));
 				filme.setTitulo(rs.getString("titulo"));
 				filme.setGenero(generoDao.select(rs.getInt("genero")));
@@ -38,30 +42,31 @@ public class FilmeDAO {
 				filme.setDuracao(rs.getString("duracao"));
 				filme.setLancamento(rs.getString("lancamento"));
 				filme.setImagem(rs.getBytes("imagem"));
-				filme.setCategoria(categoriaDao.busca(rs.getInt("categoria")));
+				filme.setCategoria(categoriaDao.select(rs.getInt("categoria")));
 				System.out.println("Filme lido");
 				
 			}
+			
 			ps.close();
-			return filme;
 			
 		} catch(SQLException ex) {
 			System.err.println("Erro ao Recuperar filme " + ex.getMessage());
 		} catch(Exception ex) {
 			System.err.println("Erro Geral " + ex.getMessage());
 		}
-		return null;
+		return filme;
 	}
 	
 	
-	public ArrayList<Filme> readAll(){
+	public ArrayList<Filme> selectAll(){
+		
+		ArrayList<Filme> lista = new ArrayList<Filme>();
+		
 		try {
 			String SQL = "SELECT * FROM " + tabela + "  ORDER BY titulo;";
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
 			ResultSet rs = ps.executeQuery();
-			
-			ArrayList<Filme> lista = new ArrayList<Filme>();
-			
+	
 			while(rs.next()) {
 				Filme filme = new Filme();
 				filme.setId(rs.getInt("id"));
@@ -72,7 +77,7 @@ public class FilmeDAO {
 				filme.setDuracao(rs.getString("duracao"));
 				filme.setLancamento(rs.getString("lancamento"));
 				filme.setImagem(rs.getBytes("imagem"));
-				filme.setCategoria(categoriaDao.busca(rs.getInt("categoria")));
+				filme.setCategoria(categoriaDao.select(rs.getInt("categoria")));
 				System.out.println("Filme lido");
 				
 				if(filme.getId() != null ) {
@@ -81,40 +86,22 @@ public class FilmeDAO {
 				
 			}
 			ps.close();
-			return lista;
+			
 			
 		} catch(SQLException ex) {
 			System.err.println("Erro ao Recuperar filme " + ex.getMessage());
 		} catch(Exception ex) {
 			System.err.println("Erro Geral " + ex.getMessage());
 		}
-		return null;
-	}
-	
-	
-	
-	public Boolean nserir(Filme f) {
-		Boolean retorno = false;
-		try {
-			
-			String SQL = "INSERT INTO " + tabela + " VALUES (DEFAULT,  '" + f.getTitulo() + "', '" + f.getGenero().getId() + "', '" + f.getCopias() + "', '" + f.getSinopse() + "', '" + f.getDuracao() + "', '" + f.getLancamento() + "', '" + f.getImagem() + "', '" + f.getCategoria().getId() + "');";
-			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
-
-			ps.executeUpdate(SQL);						// Usado para fazer qualquer alteração. Não tem nenhum retorno
-			ps.close();
-			retorno = true;
-			
-		} catch (Exception e) {
-			System.out.println("Erro: " + e.getMessage());
-		}
-		return retorno;
-	}
-	
-	
-	
-	public Boolean inserir(Filme f) {
 		
-		Boolean retorno = false;
+		return lista;
+	}
+	
+
+	
+	public Boolean insert(Filme f) {
+		
+		Boolean rowInserted = false;
 		
 		try {
 			
@@ -131,46 +118,89 @@ public class FilmeDAO {
 			ps.setBytes(7, f.getImagem());
 			ps.setInt(8, f.getCategoria().getId());
 			
-			ps.executeUpdate();						// Usado para fazer qualquer alteração. Não tem nenhum retorno
+			rowInserted = ps.executeUpdate() > 0;						
 			ps.close();
 			
-			retorno = true;
 			
 		} catch (Exception e) {
 			System.out.println("Erro: " + e.getMessage());
 		}
 		
-		return retorno;
+		return rowInserted;
 	}
 	
 	
-	public void editar(Filme f) {
+	
+	public boolean update(Filme f) {
+		
+		boolean rowUpdated = false;
+		
 		try {
 			
-			String SQL = "UPDATE " + tabela + " SET titulo = '" + f.getTitulo() + "', genero = '" + f.getGenero().getId() + "', copias = '" + f.getCopias() + "', sinopse = '" + f.getSinopse() + "', duracao = '" + f.getDuracao() + "', lancamento = '" + f.getLancamento() + "', imagem = '" + f.getImagem() + "', categoria = '" + f.getCategoria().getId() + "' WHERE id = " + f.getId() + ";" ;			// id é int, não colocar aspassimples
+			String SQL = "UPDATE " + tabela + " SET titulo = ?, genero = ?, copias = ?, sinopse = ?, duracao = ?, lancamento = ?, imagem = ?, categoria = ? WHERE id = ?;" ;	
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
-			ps.executeUpdate(SQL);
+			
+			ps.setString(1, f.getTitulo());
+			ps.setInt(2, f.getGenero().getId());
+			ps.setInt(3, f.getCopias());
+			ps.setString(4, f.getSinopse());
+			ps.setString(5, f.getDuracao());
+			ps.setString(6, f.getLancamento());
+			ps.setBytes(7, f.getImagem());
+			ps.setInt(8, f.getCategoria().getId());
+			ps.setInt(9, f.getId());
+			
+			
+			rowUpdated = ps.executeUpdate() > 0;
 			ps.close();
 			
 		} catch (Exception e) {
 			System.out.println("Erro: " + e.getMessage());
 		}
+		
+		return rowUpdated;
 	}
 	
-	public void apagar(Integer id) {
+	
+	
+	public boolean delete(Integer id) {
+		
+		boolean rowDeleted = false;
+		
 		try {
 			
-			String SQL = "DELETE FROM " + tabela + " WHERE id = " + id + ";" ;			// id é int, não colocar aspassimples
+			String SQL = "DELETE FROM " + tabela + " WHERE id = ?;" ;			
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
-			ps.executeUpdate(SQL);												// Usado para fazer qualquer alteração. Não tem nenhum retorno
+			
+			ps.setInt(1, id);
+			
+			rowDeleted = ps.executeUpdate() > 0;								
 			ps.close();
 			
 		} catch (Exception e) {
 			System.out.println("Erro: " + e.getMessage());
 		}
+		
+		return rowDeleted;
 	}
 	
 	
+	// Trata os erros de todas as excessões das chamadas SQL
+	private void printSQLException(SQLException ex) {
+		for (Throwable e : ex) {
+			if (e instanceof SQLException) {
+				e.printStackTrace(System.err);
+				System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+				System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+				System.err.println("Message: " + e.getMessage());
+				Throwable t = ex.getCause();
+				while(t != null) {
+					System.out.println("Cause: " + t);
+					t.getCause();
+				}
+			}
+		}
+	}
 	
 	
 }

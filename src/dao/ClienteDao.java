@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 import bean.Cliente;
 
-public class ClienteDAO {
+public class ClienteDao {
 	private DataSource dataSource;
 	private String tabela;
 	//private DependenteDAO dependenteDao;
 
 	
-	public ClienteDAO(DataSource datasource){
+	public ClienteDao(DataSource datasource){
 		this.dataSource = datasource;
 		this.tabela = "cliente";
 		//dependenteDao = new DependenteDAO(dataSource);

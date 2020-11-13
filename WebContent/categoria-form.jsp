@@ -1,11 +1,9 @@
-
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-<title>Formulario de Genero</title>
+<title>Formulario de Categoria</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -39,30 +37,36 @@
 		<div class="card">
 			<div class="card-body">
 				
-				<c:if test="${genero != null}">
+				<c:if test="${categoria != null}">
 					<caption>
-						<h2>Editar Genero</h2>
+						<h2>Editar Categoria</h2>
 					</caption>
 				
-					<form action="generoServlet" method="post">
+					<form action="categoria" method="post">
 						<input type="hidden" name="action" value="update" />
-						<input type="hidden" name="id" value="<c:out value='${genero.id}' />" />
+						<input type="hidden" name="id" value="<c:out value='${categoria.id}' />" />
 				</c:if>
 				
 				
-				<c:if test="${genero == null}">
+				<c:if test="${categoria == null}">
 					<caption>
-						<h2>Novo Genero</h2>
+						<h2>Nova Categoria</h2>
 					</caption>
 				
-					<form action="generoServlet" method="post">
+					<form action="categoria" method="post">
 						<input type="hidden" name="action" value="insert" />
 				</c:if>
 
 					<fieldset class="form-group">
-						<label>Genero</label> <input type="text"
-							value="<c:out value='${genero.nome}' />" class="form-control"
+						<label>Categoria</label> <input type="text"
+							value="<c:out value='${categoria.nome}' />" class="form-control"
 							name="nome" required="required">
+					</fieldset>
+					
+					<fieldset class="form-group">
+						<label>Preço</label> <input type="number" step="0.01"
+							value="<c:out value='${categoria.preco}' />" class="form-control"
+							name="preco" required="required">
 					</fieldset>
 
 					<button type="submit" class="btn btn-success">Save</button>

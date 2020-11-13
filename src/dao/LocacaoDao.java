@@ -7,16 +7,16 @@ import java.util.ArrayList;
 import bean.Locacao;
 
 
-public class LocacaoDAO {
+public class LocacaoDao {
 	private DataSource datasource;
-	private ClienteDAO clienteDao; 
-	private FilmeDAO filmeDao;
+	private ClienteDao clienteDao; 
+	private FilmeDao filmeDao;
 	private String tabela;
 	
-	public LocacaoDAO(DataSource datasource){
+	public LocacaoDao(DataSource datasource){
 		this.datasource = datasource;
-		this.clienteDao = new ClienteDAO(datasource);
-		this.filmeDao = new FilmeDAO(datasource);
+		this.clienteDao = new ClienteDao(datasource);
+		this.filmeDao = new FilmeDao(datasource);
 		this.tabela = "locacao";
 	}
 	
@@ -32,7 +32,7 @@ public class LocacaoDAO {
 				
 				locacao.setId(rs.getInt("id"));
 				locacao.setCliente(clienteDao.busca(rs.getInt("cliente")));
-				locacao.setFilme(filmeDao.busca(rs.getInt("filme")));
+				locacao.setFilme(filmeDao.select(rs.getInt("filme")));
 				locacao.setLocacao(rs.getDate("aluguel"));
 				locacao.setDevolucao(rs.getDate("devolucao"));
 		
@@ -61,7 +61,7 @@ public class LocacaoDAO {
 				Locacao locacao = new Locacao();
 				locacao.setId(rs.getInt("id"));
 				locacao.setCliente(clienteDao.busca(rs.getInt("cliente")));
-				locacao.setFilme(filmeDao.busca(rs.getInt("filme")));
+				locacao.setFilme(filmeDao.select(rs.getInt("filme")));
 				locacao.setLocacao(rs.getDate("aluguel"));
 				locacao.setDevolucao(rs.getDate("devolucao"));
 		
@@ -90,7 +90,7 @@ public class LocacaoDAO {
 				Locacao locacao = new Locacao();
 				locacao.setId(rs.getInt("id"));
 				locacao.setCliente(clienteDao.busca(rs.getInt("cliente")));
-				locacao.setFilme(filmeDao.busca(rs.getInt("filme")));
+				locacao.setFilme(filmeDao.select(rs.getInt("filme")));
 				locacao.setLocacao(rs.getDate("aluguel"));
 				locacao.setDevolucao(rs.getDate("devolucao"));
 		
