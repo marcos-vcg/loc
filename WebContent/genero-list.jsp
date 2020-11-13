@@ -7,10 +7,8 @@
 <html>
 	<head>
 	
-		<link rel="stylesheet"
-		href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-		>
-		
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+		<link rel="stylesheet" href="style.css">
 		<meta charset="utf-8">
 		<title>Cadastro de Generos</title>
 		<link rel="icon" href="imagens/favicon.png">
@@ -22,12 +20,12 @@
 		<nav class="navbar navbar-expand-md navbar-dark"
 			style="background-color: blue">
 			<div>
-				<a href="http://localhost:8080/loc" class="navbar-brand"> Locadora </a>
+				<a href="http://localhost:8080/loc" class="navbar-brand"> Locadora Digital</a>
 			</div>
 
 			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/generoServlet/list"
-					class="nav-link">Generos List</a></li>
+				<li><a href="<%=request.getContextPath()%>/generoServlet"
+					class="nav-link">Generos</a></li>
 			</ul>
 		</nav>
 	</header>
@@ -59,9 +57,9 @@
 							<td><c:out value="${genero.id}" /></td>
 				            <td><c:out value="${genero.nome}"/></td>
 							
-							<td><a href="generoServlet?action=edit&id=<c:out value='${genero.id}' />" class="Botao3">Edit</a>
+							<td><a href="generoServlet?action=edit&id=<c:out value='${genero.id}' />" class="Botao3" class="btn btn-info">Editar</a>
 								&nbsp;&nbsp;&nbsp;&nbsp; 
-								<a href="generoServlet?action=delete&id=<c:out value='${genero.id}' />" class="Botao4" type="">Delete</a>
+								<a href="generoServlet?action=delete&id=<c:out value='${genero.id}' />" class="Botao4" class="btn btn-warning" type="">Deletar</a>
 								<form method="post" action="generoServlet">
 									<input type="hidden" name="id" value="<c:out value='${genero.id}' />" />
 								</form> </td>
@@ -73,5 +71,6 @@
 			</table>
 		</div>
 	</div>
+	
 </body>
 </html>

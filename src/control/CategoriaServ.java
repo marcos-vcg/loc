@@ -19,13 +19,13 @@ import dao.GeneroDao;
  * Servlet implementation class CategoriaServlet
  */
 @WebServlet("/categoriaServlet")
-public class CategoriaServlet extends HttpServlet {
+public class CategoriaServ extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CategoriaServlet() {
+    public CategoriaServ() {
         super();
         // TODO Auto-generated constructor stub
     }

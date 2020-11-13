@@ -21,7 +21,7 @@
 			</div>
 
 			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/list"
+				<li><a href="<%=request.getContextPath()%>/generoServlet"
 					class="nav-link">Generos</a></li>
 			</ul>
 		</nav>
@@ -33,7 +33,7 @@
 				
 				<c:if test="${genero != null}">
 					<caption>
-						<h2>Edit Genero</h2>
+						<h2>Editar Genero</h2>
 					</caption>
 				
 					<form action="generoServlet" method="post">
