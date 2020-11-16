@@ -58,43 +58,64 @@
 				</c:if>
 
 					<fieldset class="form-group">
-						<label>Título</label> <input type="text"
+						<label>Título*</label> <input type="text"
 							value="<c:out value='${filme.titulo}' />" class="form-control"
 							name="titulo" required="required">
 					</fieldset>
 					
 					<fieldset class="form-group">
-						<label>Genero</label> 
-							<select value="<c:out value='${filme.genero.nome}' />" class="form-control"	name="genero" required="required">
-								<c:forEach var="genero" items="${generos}">
-									<option><c:out value="${genero.nome}" />
+						<label>Genero*</label> 
+							<select name="genero" class="form-control" required="required">
+									<option value="" >  --  Selecione --  </option>
+								<c:forEach var="gen" items="${generos}">
+									<option value="<c:out value='${gen.id}'/>"  <c:if test="${filme.genero.id == gen.id}">selected</c:if>  > <c:out value="${gen.nome}" /> </option>
 								</c:forEach>
-								
 							</select>
 					</fieldset>
 					
 					<fieldset class="form-group">
-						<label>Cópias</label> <input type="number" step="1"
-							value="<c:out value='${filme.genero.nome}' />" class="form-control"
-							name="copias" required="required">
-					</fieldset>
-					
-					<fieldset class="form-group">
-						<label>Lançamento</label> <input type="date" step="1"
-							value="<c:out value='${filme.genero.nome}' />" class="form-control"
+						<label>Cópias*</label> <input type="number" step="1"
+							value="<c:out value='${filme.copias}' />" class="form-control"
 							name="copias" required="required">
 					</fieldset>
 					
 					<fieldset class="form-group">
 						<label>Categoria</label> 
-							<select value="<c:out value='${filme.categoria.nome}' />" class="form-control"	name="genero" required="required">
-								<c:forEach var="categoria" items="${categorias}">
-									<option><c:out value="${categoria.nome}" />
+							<select name="categoria" class="form-control" required="required">
+								<c:forEach var="categ" items="${categorias}">
+									<option value="<c:out value='${categ.id}' />" <c:if test="${filme.categoria.id == categ.id}">selected</c:if> > <c:out value="${categ.nome}" /></option>
 								</c:forEach>
 								
 							</select>
 					</fieldset>
-
+					
+					<fieldset class="form-group">
+						<label>Lançamento</label> <input type="date" step="1"
+							value="<c:out value='${filme.genero.nome}' />" class="form-control"
+							name="copias">
+					</fieldset>
+					
+					<fieldset class="form-group">
+						<label>Duração</label> <input type="text"
+							value="<c:out value='${filme.duracao}' />" class="form-control"
+							name="duracao" >
+					</fieldset>
+					
+					<fieldset class="form-group">
+						<label>Sinopse</label> 
+						<textarea rows="" cols="" value="<c:out value='${filme.sinopse}' />" class="form-control"
+							name="sinopse" ></textarea>
+					</fieldset>
+					
+					<fieldset class="form-group">
+						<label for="imagem">Imagem</label>
+						<br>
+	  					<input type="file" id="imagem" name="imagem" accept="image/*" onchange="">
+	  					<br>
+	  					<img id="img" alt="Foto de Capa" src="<c:out value='${filme.imagem}' />" style="width: 200px" />
+					</fieldset>
+					
+					
 					<button type="submit" class="btn btn-success">Save</button>
 				</form>
 			</div>
