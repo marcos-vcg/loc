@@ -18,7 +18,7 @@ public class DependenteDao {
 		this.tabela = "dependente";
 	}
 	
-	public Dependente busca(int id) {
+	public Dependente select(int id) {
 		try {
 			String SQL = "SELECT * FROM " + tabela + " WHERE id = '" + id + "'";
 			java.sql.PreparedStatement ps = datasource.getConnection().prepareStatement(SQL);
@@ -29,7 +29,7 @@ public class DependenteDao {
 				dependente.setId(rs.getInt("id"));
 				dependente.setNome(rs.getString("nome"));
 				dependente.setGrau(Grau.valueOf(rs.getString("grau")));
-				dependente.setTitular(clienteDao.busca(rs.getInt("titular")));
+				dependente.setTitular(clienteDao.select(rs.getInt("titular")));
 			}
 			
 			ps.close();
@@ -43,7 +43,7 @@ public class DependenteDao {
 		return null;
 	}
 	
-	public ArrayList<Dependente> readAll(int id){
+	public ArrayList<Dependente> selectAllOf(int id){
 		try {
 			String SQL = "SELECT * FROM " + tabela + " WHERE titular = '" + id + "' ORDER BY nome";
 			java.sql.PreparedStatement ps = datasource.getConnection().prepareStatement(SQL);
@@ -56,7 +56,7 @@ public class DependenteDao {
 				dependente.setId(rs.getInt("id"));
 				dependente.setNome(rs.getString("nome"));
 				dependente.setGrau(Grau.valueOf(rs.getString("grau")));
-				dependente.setTitular(clienteDao.busca(rs.getInt("titular")));
+				dependente.setTitular(clienteDao.select(rs.getInt("titular")));
 		
 				lista.add(dependente);
 			}
@@ -71,7 +71,7 @@ public class DependenteDao {
 		return null;
 	}
 	
-	public ArrayList<Dependente> readAll(){
+	public ArrayList<Dependente> selectAll(){
 		try {
 			String SQL = "SELECT * FROM " + tabela + " ORDER BY nome";
 			java.sql.PreparedStatement ps = datasource.getConnection().prepareStatement(SQL);
@@ -84,7 +84,7 @@ public class DependenteDao {
 				dependente.setId(rs.getInt("id"));
 				dependente.setNome(rs.getString("nome"));
 				dependente.setGrau(Grau.valueOf(rs.getString("grau")));
-				dependente.setTitular(clienteDao.busca(rs.getInt("titular")));
+				dependente.setTitular(clienteDao.select(rs.getInt("titular")));
 		
 				lista.add(dependente);
 			}

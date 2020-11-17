@@ -43,6 +43,7 @@ public class FilmeDao {
 				filme.setLancamento(rs.getString("lancamento"));
 				filme.setImagem(rs.getBytes("imagem"));
 				filme.setCategoria(categoriaDao.select(rs.getInt("categoria")));
+				
 				System.out.println("Filme lido");
 				
 			}

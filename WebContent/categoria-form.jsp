@@ -30,6 +30,18 @@
 				<li><a href="<%=request.getContextPath()%>/filme" class="nav-link">Filmes</a></li>
 			</ul>
 			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/cliente" class="nav-link">Clientes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/dependente" class="nav-link">Dependentes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/locacao" class="nav-link">Locações</a></li>
+			</ul>
+			
 		</nav>
 	</header>
 	<br>

@@ -21,7 +21,7 @@
 			</div>
 
 			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/generoServlet" class="nav-link">Generos</a></li>
+				<li><a href="<%=request.getContextPath()%>/genero" class="nav-link">Generos</a></li>
 			</ul>
 			
 			<ul class="navbar-nav">
@@ -30,6 +30,18 @@
 			
 			<ul class="navbar-nav">
 				<li><a href="<%=request.getContextPath()%>/filme" class="nav-link">Filmes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/cliente" class="nav-link">Clientes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/dependente" class="nav-link">Dependentes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/locacao" class="nav-link">Locações</a></li>
 			</ul>
 			
 		</nav>
@@ -65,9 +77,9 @@
 				            <td><c:out value="${categoria.preco}"/></td>
 							
 							<td>
-								<a href="categoria?action=edit&id=<c:out value='${categoria.id}' />" class="botao-editar" class="btn btn-info">Editar</a>
+								<a href="categoria?action=edit&id=<c:out value='${categoria.id}' />" class="btn btn-info"><img alt="Imagem não encontrada" src="imagens/edit.png"></a>
 									&nbsp;&nbsp;&nbsp; 
-								<a href="categoria?action=delete&id=<c:out value='${categoria.id}' />" class="botao-excluir" class="btn btn-warning" type="">Deletar</a>
+								<a href="categoria?action=delete&id=<c:out value='${categoria.id}' />" class="btn btn-warning" type=""><img alt="Imagem não encontrada" src="imagens/delete.png"></a>
 								<form method="post" action="categoria">
 									<input type="hidden" name="id" value="<c:out value='${categoria.id}' />" />
 								</form> 

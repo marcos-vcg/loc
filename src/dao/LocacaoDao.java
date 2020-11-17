@@ -31,7 +31,7 @@ public class LocacaoDao {
 			while(rs.next()) {
 				
 				locacao.setId(rs.getInt("id"));
-				locacao.setCliente(clienteDao.busca(rs.getInt("cliente")));
+				locacao.setCliente(clienteDao.select(rs.getInt("cliente")));
 				locacao.setFilme(filmeDao.select(rs.getInt("filme")));
 				locacao.setLocacao(rs.getDate("aluguel"));
 				locacao.setDevolucao(rs.getDate("devolucao"));
@@ -60,7 +60,7 @@ public class LocacaoDao {
 			while(rs.next()) {
 				Locacao locacao = new Locacao();
 				locacao.setId(rs.getInt("id"));
-				locacao.setCliente(clienteDao.busca(rs.getInt("cliente")));
+				locacao.setCliente(clienteDao.select(rs.getInt("cliente")));
 				locacao.setFilme(filmeDao.select(rs.getInt("filme")));
 				locacao.setLocacao(rs.getDate("aluguel"));
 				locacao.setDevolucao(rs.getDate("devolucao"));
@@ -89,7 +89,7 @@ public class LocacaoDao {
 			while(rs.next()) {
 				Locacao locacao = new Locacao();
 				locacao.setId(rs.getInt("id"));
-				locacao.setCliente(clienteDao.busca(rs.getInt("cliente")));
+				locacao.setCliente(clienteDao.select(rs.getInt("cliente")));
 				locacao.setFilme(filmeDao.select(rs.getInt("filme")));
 				locacao.setLocacao(rs.getDate("aluguel"));
 				locacao.setDevolucao(rs.getDate("devolucao"));

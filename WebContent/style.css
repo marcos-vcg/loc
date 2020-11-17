@@ -33,7 +33,6 @@ h1 {
 }
 
 .botao-editar {
-	background-image: url("imagens/edit.png"); 
 	text-decoration: none;
 	background-color: #00b300;
 	padding: 1px 4px 1px 4px;
@@ -43,8 +42,7 @@ h1 {
 	border-radius: 4px;
 }
 
-.botao-excluir {
-	background-image: url("imagens/delete.png"); 
+.botao-excluir { 
 	text-decoration: none;
 	background-color: #e10000;
 	padding: 1px 4px 1px 4px;
@@ -53,5 +51,4 @@ h1 {
 	font-weight: 400;
 	border-radius: 4px;
 }
-
 

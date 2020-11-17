@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -10,18 +11,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.Genero;
+import bean.Cliente;
+import bean.Dependente;
 import dao.DataSource;
-import dao.GeneroDao;
+import dao.ClienteDao;
+import dao.DependenteDao;
 
 /**
- * Servlet implementation class GeneroServlet2
+ * Servlet implementation class ClienteServlet
  */
-@WebServlet(name="GeneroServlet3", urlPatterns = {"/genero"})
-public class GeneroServlet3 extends HttpServlet {
+@WebServlet(name="ClienteServlet", urlPatterns = {"/cliente"})
+public class ClienteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DataSource dataSource;
-	private GeneroDao generoDao;   
+	private ClienteDao clienteDao;  
+	private DependenteDao dependenteDao;
 	
 	
     /**
@@ -29,7 +33,8 @@ public class GeneroServlet3 extends HttpServlet {
      */
     public void init() throws ServletException {
     	dataSource = new DataSource();
-    	generoDao = new GeneroDao(dataSource);
+    	clienteDao = new ClienteDao(dataSource);
+    	dependenteDao = new DependenteDao(dataSource);
     }
 
     
@@ -54,23 +59,23 @@ public class GeneroServlet3 extends HttpServlet {
 					
 			switch(action) {
 			
+				case ("new"):
+					showNewForm(request, response);
+					break;
+			
 				case ("insert"):
-					// Insere Genero
 					insert(request, response);
 					break;
 					
 				case ("delete"):
-					// Delete Genero
 					delete(request, response);
 					break;
 				
 				case ("edit"):
-					// Encaminha para a página de Edição de Gênero
 					showEditForm(request, response);
 					break;
 				
 				case ("update"):
-					// Update Genero
 					update(request, response);
 					break;
 					
@@ -84,67 +89,118 @@ public class GeneroServlet3 extends HttpServlet {
 		
 	}
 
+	
+	// Redirect to New Page
+	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		try {
+			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-form.jsp");
+			dispatcher.forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	
 	// Insert
 	private void insert(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
-		String nome = request.getParameter("nome");	
-		Genero genero = new Genero();
-		genero.setNome(nome);
-		generoDao.insert(genero);
-		response.sendRedirect("genero");
+		String nome = request.getParameter("nome");
+		String cpf = request.getParameter("cpf");
+		String telefone = request.getParameter("telefone");
+		String email = request.getParameter("email");
+		String nascimento = request.getParameter("nascimento");
+		String endereco = request.getParameter("endereco");
+		//byte[] imagem = request.getParameter("imagem");
+				
+		
+		Cliente cliente = new Cliente();
+		cliente.setNome(nome);
+		cliente.setCpf(cpf);
+		cliente.setTelefone(telefone);
+		cliente.setEmail(email);
+		cliente.setNascimento(nascimento);
+		cliente.setEndereco(endereco);
+		//cliente.setImagem(imagem);
+		
+		clienteDao.insert(cliente);
+		response.sendRedirect("cliente");
 	}	
+	
 	
 	// Delete
 	private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
 		try {
-			generoDao.delete(id);
+			clienteDao.delete(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		response.sendRedirect("genero");
+		response.sendRedirect("cliente");
 	}	
 
+	
 	// Página de Edição
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
-		Genero genero;
+		Cliente cliente;
+		ArrayList<Dependente> dependentes;
 		try {
 			// busca o genero a ser editado e repassa para a pagina de edição
-			genero = generoDao.select(id);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("genero-form.jsp");
-			request.setAttribute("genero", genero);
+			cliente = clienteDao.select(id);
+			dependentes = dependenteDao.selectAllOf(id);
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-form.jsp");
+			request.setAttribute("cliente", cliente);
+			request.setAttribute("dependentes", dependentes);
 			dispatcher.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//response.sendRedirect("generoServlet/list");
 	}	
+	
 	
 	// Update
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
-		String nome = request.getParameter("nome");	
-		Genero genero = new Genero();
-		genero.setId(id);
-		genero.setNome(nome);
-		generoDao.update(genero);
-		response.sendRedirect("genero");
+		
+		String nome = request.getParameter("nome");
+		String cpf = request.getParameter("cpf");
+		String telefone = request.getParameter("telefone");
+		String email = request.getParameter("email");
+		String nascimento = request.getParameter("nascimento");
+		String endereco = request.getParameter("endereco");
+		//byte[] imagem = request.getParameter("imagem");
+		
+		
+		Cliente cliente = new Cliente();
+		cliente.setId(id);
+		cliente.setNome(nome);
+		cliente.setCpf(cpf);
+		cliente.setTelefone(telefone);
+		cliente.setEmail(email);
+		cliente.setNascimento(nascimento);
+		cliente.setEndereco(endereco);
+		//cliente.setImagem(imagem);
+		
+		clienteDao.update(cliente);
+		response.sendRedirect("cliente");
 	}	
+	
 	
 	// Default
 	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		try {
 			// Preenche os elementos da Lista Padrão
-			List<Genero> generos = generoDao.selectAll();
-			request.setAttribute("generos", generos);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("genero-list.jsp");
+			List<Cliente> clientes = clienteDao.selectAll();
+			request.setAttribute("clientes", clientes);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-list.jsp");
 			dispatcher.forward(request, response);
 
 		} catch (Exception e) {

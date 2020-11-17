@@ -19,7 +19,7 @@
 			</div>
 
 			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/generoServlet" class="nav-link">Generos</a></li>
+				<li><a href="<%=request.getContextPath()%>/genero" class="nav-link">Generos</a></li>
 			</ul>
 			
 			<ul class="navbar-nav">
@@ -28,6 +28,18 @@
 			
 			<ul class="navbar-nav">
 				<li><a href="<%=request.getContextPath()%>/filme" class="nav-link">Filmes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/cliente" class="nav-link">Clientes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/dependente" class="nav-link">Dependentes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/locacao" class="nav-link">Locações</a></li>
 			</ul>
 			
 		</nav>
@@ -58,9 +70,8 @@
 				</c:if>
 
 					<fieldset class="form-group">
-						<label>Título*</label> <input type="text"
-							value="<c:out value='${filme.titulo}' />" class="form-control"
-							name="titulo" required="required">
+						<label>Título*</label> 
+						<input name="titulo" type="text" value="<c:out value='${filme.titulo}' />" class="form-control" required="required">
 					</fieldset>
 					
 					<fieldset class="form-group">
@@ -74,14 +85,14 @@
 					</fieldset>
 					
 					<fieldset class="form-group">
-						<label>Cópias*</label> <input type="number" step="1"
-							value="<c:out value='${filme.copias}' />" class="form-control"
-							name="copias" required="required">
+						<label>Cópias*</label> 
+						<input name="copias" type="number" step="1" value="<c:out value='${filme.copias}' />" class="form-control" required="required">
 					</fieldset>
 					
 					<fieldset class="form-group">
-						<label>Categoria</label> 
+						<label>Categoria*</label> 
 							<select name="categoria" class="form-control" required="required">
+									<option value="" selected disabled hidden="hidden">  --  Selecione --  </option>
 								<c:forEach var="categ" items="${categorias}">
 									<option value="<c:out value='${categ.id}' />" <c:if test="${filme.categoria.id == categ.id}">selected</c:if> > <c:out value="${categ.nome}" /></option>
 								</c:forEach>
@@ -90,21 +101,18 @@
 					</fieldset>
 					
 					<fieldset class="form-group">
-						<label>Lançamento</label> <input type="date" step="1"
-							value="<c:out value='${filme.genero.nome}' />" class="form-control"
-							name="copias">
+						<label>Lançamento</label> 
+						<input type="date" name="lancamento" step="1" value="<c:out value='${filme.lancamento}' />" class="form-control">
 					</fieldset>
 					
 					<fieldset class="form-group">
-						<label>Duração</label> <input type="text"
-							value="<c:out value='${filme.duracao}' />" class="form-control"
-							name="duracao" >
+						<label>Duração</label> 
+						<input type="text" name="duracao" value="<c:out value='${filme.duracao}'/>" class="form-control" >
 					</fieldset>
 					
 					<fieldset class="form-group">
 						<label>Sinopse</label> 
-						<textarea rows="" cols="" value="<c:out value='${filme.sinopse}' />" class="form-control"
-							name="sinopse" ></textarea>
+						<textarea name="sinopse" rows="" cols="" class="form-control"><c:out value='${filme.sinopse}' /></textarea>
 					</fieldset>
 					
 					<fieldset class="form-group">

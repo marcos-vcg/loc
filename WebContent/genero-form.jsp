@@ -21,7 +21,7 @@
 			</div>
 
 			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/generoServlet" class="nav-link">Generos</a></li>
+				<li><a href="<%=request.getContextPath()%>/genero" class="nav-link">Generos</a></li>
 			</ul>
 			
 			<ul class="navbar-nav">
@@ -30,6 +30,18 @@
 			
 			<ul class="navbar-nav">
 				<li><a href="<%=request.getContextPath()%>/filme" class="nav-link">Filmes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/cliente" class="nav-link">Clientes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/dependente" class="nav-link">Dependentes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/locacao" class="nav-link">Locações</a></li>
 			</ul>
 			
 		</nav>
@@ -44,7 +56,7 @@
 						<h2>Editar Genero</h2>
 					</caption>
 				
-					<form action="generoServlet" method="post">
+					<form action="genero" method="post">
 						<input type="hidden" name="action" value="update" />
 						<input type="hidden" name="id" value="<c:out value='${genero.id}' />" />
 				</c:if>
@@ -55,7 +67,7 @@
 						<h2>Novo Genero</h2>
 					</caption>
 				
-					<form action="generoServlet" method="post">
+					<form action="genero" method="post">
 						<input type="hidden" name="action" value="insert" />
 				</c:if>
 

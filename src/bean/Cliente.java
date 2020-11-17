@@ -93,6 +93,13 @@ public class Cliente implements Serializable{
 		this.imagem = imagem;
 	}
 
+	
+	
+	
+	
+	
+	
+	
 	public ArrayList<Dependente> getDependentes() {
 		return dependentes;
 	}

@@ -24,7 +24,7 @@
 			</div>
 
 			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/generoServlet" class="nav-link">Generos</a></li>
+				<li><a href="<%=request.getContextPath()%>/genero" class="nav-link">Generos</a></li>
 			</ul>
 			
 			<ul class="navbar-nav">
@@ -33,6 +33,18 @@
 			
 			<ul class="navbar-nav">
 				<li><a href="<%=request.getContextPath()%>/filme" class="nav-link">Filmes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/cliente" class="nav-link">Clientes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/dependente" class="nav-link">Dependentes</a></li>
+			</ul>
+			
+			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/locacao" class="nav-link">Locações</a></li>
 			</ul>
 			
 		</nav>
@@ -65,12 +77,11 @@
 							<td><c:out value="${genero.id}" /></td>
 				            <td><c:out value="${genero.nome}"/></td>
 							
-							<td><a href="generoServlet?action=edit&id=<c:out value='${genero.id}' />" class="botao-editar" class="btn btn-info">Editar</a>
+							<td>
+								<a href="genero?action=edit&id=<c:out value='${genero.id}' />" class="botao-editar" class="btn btn-info">Editar</a>
 								&nbsp;&nbsp;&nbsp;&nbsp; 
-								<a href="generoServlet?action=delete&id=<c:out value='${genero.id}' />" class="botao-excluir" class="btn btn-warning" type="">Deletar</a>
-								<form method="post" action="generoServlet">
-									<input type="hidden" name="id" value="<c:out value='${genero.id}' />" />
-								</form> </td>
+								<a href="genero?action=delete&id=<c:out value='${genero.id}' />" class="botao-excluir" class="btn btn-warning" type="">Deletar</a>
+							</td>
 						</tr>
 					</c:forEach>
 					

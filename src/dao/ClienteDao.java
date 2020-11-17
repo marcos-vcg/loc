@@ -19,18 +19,17 @@ public class ClienteDao {
 	}
 	
 	
-	public int ultimoCliente(){
+	public int selectLast(){
+		
+		int ultimoId = 0;
+		
 		try {
 			String SQL = "SELECT MAX(id) FROM " + tabela + ";";
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
 			ResultSet rs = ps.executeQuery();
 			
-			int ultimoId;
-			
-			while(rs.next()) {
-				
+			while(rs.next()) {			
 				ultimoId = rs.getInt(1);
-				return ultimoId;
 			}
 			ps.close();
 			
@@ -40,19 +39,23 @@ public class ClienteDao {
 		} catch(Exception ex) {
 			System.err.println("Erro Geral " + ex.getMessage());
 		}
-		return 0;
+		return ultimoId;
 	}
 	
-	public Cliente busca(Integer id){
+	
+	public Cliente select(Integer id){
+		
+		Cliente cliente = new Cliente();
+		
 		try {
-			String SQL = "SELECT * FROM " + tabela + " WHERE id = '" + id + "';";
+			String SQL = "SELECT * FROM " + tabela + " WHERE id = ?;";
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
+			
+			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
-			
-			Cliente cliente = new Cliente();
-			
-			while(rs.next()) {
 				
+			while(rs.next()) {
+				cliente = new Cliente();
 				cliente.setId(rs.getInt("id"));
 				cliente.setNome(rs.getString("nome"));
 				cliente.setCpf(rs.getString("cpf"));
@@ -62,30 +65,30 @@ public class ClienteDao {
 				cliente.setEndereco(rs.getString("endereco"));
 				cliente.setImagem(rs.getBytes("imagem"));
 				
-				//cliente.setDependentes(dependenteDao.readAll(rs.getInt("id")));
-				
 				System.out.println("Cliente lido");
 				
 			}
 			ps.close();
-			return cliente;
 			
 		} catch(SQLException ex) {
 			System.err.println("Erro ao Recuperar filme " + ex.getMessage());
 		} catch(Exception ex) {
 			System.err.println("Erro Geral " + ex.getMessage());
 		}
-		return null;
+		return cliente;
 	}
 	
 	
-	public ArrayList<Cliente> readAll(){
+	public ArrayList<Cliente> selectAll(){
+		
+		ArrayList<Cliente> lista = new ArrayList<Cliente>();
+		
 		try {
 			String SQL = "SELECT * FROM " + tabela + "  ORDER BY nome;";
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
 			ResultSet rs = ps.executeQuery();
 			
-			ArrayList<Cliente> lista = new ArrayList<Cliente>();
+			
 			
 			while(rs.next()) {
 				Cliente cliente = new Cliente();
@@ -108,94 +111,110 @@ public class ClienteDao {
 				
 			}
 			ps.close();
-			return lista;
 			
 		} catch(SQLException ex) {
 			System.err.println("Erro ao Recuperar cliente " + ex.getMessage());
 		} catch(Exception ex) {
 			System.err.println("Erro Geral " + ex.getMessage());
 		}
-		return null;
+		return lista;
 	}
 	
 	
 	
-	public Boolean inserir(Cliente c) {
-		Boolean retorno = false;
+	public boolean insert(Cliente c) {
+		boolean rowInserted = false;
 		try {
 			
-			String SQL = "INSERT INTO " + tabela + " VALUES (DEFAULT,  '" + c.getNome() + "', '" + c.getCpf() + "', '" + c.getTelefone() + "', '" + c.getEmail() + "', '" + c.getNascimento() + "', '" + c.getEndereco() + "', '" + c.getImagem() + "');";
+			String SQL = "INSERT INTO " + tabela + " VALUES (DEFAULT,  ?, ?, ?, ?, ?, ?, ?);";
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
 
-			ps.executeUpdate(SQL);						// Usado para fazer qualquer alteração. Não tem nenhum retorno
+			ps.setString(1, c.getNome());
+			ps.setString(2, c.getCpf());
+			ps.setString(3, c.getTelefone());
+			ps.setString(4, c.getEmail());
+			ps.setString(5, c.getNascimento());
+			ps.setString(6, c.getEndereco());
+			ps.setBytes(7, c.getImagem());			
+
+			rowInserted = ps.executeUpdate() > 0;	
 			ps.close();
-			retorno = true;
 			
 		} catch (Exception e) {
 			System.out.println("Erro: " + e.getMessage());
 		}
-		return retorno;
+		return rowInserted;
 	}
 	
 	
-	/*
-	public Boolean inserir(Filme f) {
+	
+	public boolean update(Cliente c) {
 		
-		Boolean retorno = false;
+		boolean rowUpdated = false;
 		
 		try {
 			
-			String SQL = "INSERT INTO filme (titulo, genero, copias, sinopse, duracao, lancamento, imagem , categoria) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			String SQL = "UPDATE " + tabela + " SET nome = ?, cpf = ?, telefone = ?, email = ?, nascimento = ?, endereco = ?, imagem = ? WHERE id = ?;" ;	
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
 			
-			//ps.setString(1, tabela);
-			ps.setString(1, f.getTitulo());
-			ps.setInt(2, f.getGenero().getId());
-			ps.setInt(3, f.getCopias());
-			ps.setString(4, f.getSinopse());
-			ps.setString(5, f.getDuracao());
-			ps.setString(6, f.getLancamento());
-			ps.setBytes(7, f.getImagem());
-			ps.setInt(8, f.getCategoria().getId());
+			ps.setString(1, c.getNome());
+			ps.setString(2, c.getCpf());
+			ps.setString(3, c.getTelefone());
+			ps.setString(4, c.getEmail());
+			ps.setString(5, c.getNascimento());
+			ps.setString(6, c.getEndereco());
+			ps.setBytes(7, c.getImagem());			
+			ps.setInt(8, c.getId());
 			
-			ps.executeUpdate(SQL);						// Usado para fazer qualquer alteração. Não tem nenhum retorno
-			ps.close();
-			
-			retorno = true;
-			
-		} catch (Exception e) {
-			System.out.println("Erro: " + e.getMessage());
-		}
-		
-		return retorno;
-	}*/
-	
-	
-	public void editar(Cliente c) {
-		try {
-			
-			String SQL = "UPDATE " + tabela + " SET nome = '" + c.getNome() + "', cpf = '" + c.getCpf() + "', telefone = '" + c.getTelefone() + "', email = '" + c.getEmail() + "', nascimento = '" + c.getNascimento() + "', endereco = '" + c.getEndereco() + "', imagem = '" + c.getImagem() + "' WHERE id = " + c.getId() + ";" ;			// id é int, não colocar aspassimples
-			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
-			ps.executeUpdate(SQL);
+			rowUpdated = ps.executeUpdate() > 0;
 			ps.close();
 			
 		} catch (Exception e) {
 			System.out.println("Erro: " + e.getMessage());
 		}
+		
+		return rowUpdated;
 	}
 	
-	public void apagar(Integer id) {
+	
+	public boolean delete(Integer id) {
+		
+		boolean rowDeleted = false;
+		
 		try {
 			
-			String SQL = "DELETE FROM " + tabela + " WHERE id = " + id + ";" ;			// id é int, não colocar aspassimples
+			String SQL = "DELETE FROM " + tabela + " WHERE id = ?;" ;			
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
-			ps.executeUpdate(SQL);												// Usado para fazer qualquer alteração. Não tem nenhum retorno
+			
+			ps.setInt(1, id);
+			
+			rowDeleted = ps.executeUpdate() > 0;
 			ps.close();
 			
 		} catch (Exception e) {
 			System.out.println("Erro: " + e.getMessage());
 		}
+		return rowDeleted;
 	}
+	
+	
+	
+	// Trata os erros de todas as excessões das chamadas SQL
+		private void printSQLException(SQLException ex) {
+			for (Throwable e : ex) {
+				if (e instanceof SQLException) {
+					e.printStackTrace(System.err);
+					System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+					System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+					System.err.println("Message: " + e.getMessage());
+					Throwable t = ex.getCause();
+					while(t != null) {
+						System.out.println("Cause: " + t);
+						t.getCause();
+					}
+				}
+			}
+		}
 	
 	
 	
