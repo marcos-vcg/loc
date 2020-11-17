@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.Cliente;
 import bean.Dependente;
+import bean.Grau;
 import dao.DataSource;
 import dao.ClienteDao;
 import dao.DependenteDao;
+
 
 /**
  * Servlet implementation class ClienteServlet
@@ -91,11 +93,14 @@ public class ClienteServlet extends HttpServlet {
 
 	
 	// Redirect to New Page
-	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		ArrayList<Grau> graus;
 		
 		try {
+			graus = Grau.getGraus();
 			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-form.jsp");
+			request.setAttribute("graus", graus);
 			dispatcher.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,14 +154,18 @@ public class ClienteServlet extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("id"));
 		Cliente cliente;
 		ArrayList<Dependente> dependentes;
+		ArrayList<Grau> graus;
+		
 		try {
 			// busca o genero a ser editado e repassa para a pagina de edição
 			cliente = clienteDao.select(id);
 			dependentes = dependenteDao.selectAllOf(id);
+			graus = Grau.getGraus();
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-form.jsp");
 			request.setAttribute("cliente", cliente);
 			request.setAttribute("dependentes", dependentes);
+			request.setAttribute("graus", graus);
 			dispatcher.forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();

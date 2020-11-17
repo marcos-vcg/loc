@@ -8,6 +8,7 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
+
 </head>
 <body>
 
@@ -45,7 +46,7 @@
 		</nav>
 	</header>
 	<br>
-	<div class="container col-md-10">
+	<div class="container col-md-8">
 		<div class="card">
 			<div class="card-body">
 				
@@ -53,10 +54,10 @@
 					<caption>
 						<h2>Editar Cliente</h2>
 					</caption>
-				
-					<form action="cliente" method="post">
-						<input type="hidden" name="action" value="update" />
-						<input type="hidden" name="id" value="<c:out value='${cliente.id}' />" />
+						<form action="cliente" method="post">
+							<fieldset class="form-group">
+							<input type="hidden" name="action" value="update" />
+							<input type="hidden" name="id" value="<c:out value='${cliente.id}' />" />
 				</c:if>
 				
 				
@@ -64,73 +65,65 @@
 					<caption>
 						<h2>Novo Cliente</h2>
 					</caption>
-				
-					<form action="cliente" method="post">
-						<input type="hidden" name="action" value="insert" />
+						<form action="cliente" method="post">
+							<fieldset class="form-group">
+							<input type="hidden" name="action" value="insert" />
 				</c:if>
 
-					<fieldset class="form-group">
-						<label>Nome*</label> 
-						<input name="nome" type="text" maxlength="40" placeholder="MeuNome..." value="<c:out value='${cliente.nome}' />" class="form-control" required="required">
-					</fieldset>
+
+					<div class="container text-right">
+						<img id="mostrarImagem" alt="Foto de Capa" src="imagens/perfil.jpg" style="width: 100px; height: 130px" /> 					
+						<br>
+						<input name="photo" id="imagem" type="file" accept="image/*" onchange="document.getElementById('mostrarImagem').src = window.URL.createObjectURL(this.files[0])">
+					</div>
 					
-					<fieldset class="form-group">
-						<label>CPF*</label> 
-						<input name="cpf" type="text" maxlength="15" placeholder="XXX.XXX.XXX-XX" value="<c:out value='${cliente.cpf}' />" class="form-control" required="required">
-					</fieldset>
-					
-					<fieldset class="form-group">
-						<label>Telefone*</label> 
-						<input name="telefone" type="tel" maxlength="15" placeholder="(XX)XXXXX-XXXX" pattern="\([0-9]{2}\) [0-9]{4,6}-[0-9]{3,4}$" value="<c:out value='${cliente.telefone}' />" class="form-control" required="required">
-					</fieldset>
-					
-					<fieldset class="form-group">
-						<label>Nascimento</label> 
-						<input name="email" type="date" maxlength="15"  value="<c:out value='${cliente.telefone}' />" class="form-control" required="required">
-					</fieldset>
-					
-					<fieldset class="form-group">
-						<label>Endereço</label> 
-						<input name="email" type="text" maxlength="40" placeholder="Rua tal, núm 1234" pattern="" value="<c:out value='${cliente.telefone}' />" class="form-control" required="required">
-					</fieldset>
-					
-					
-					<fieldset class="form-group">
-						<label>Email</label> 
-						<input name="email" type="email" maxlength="20" placeholder="exemplo@host.com" pattern="" value="<c:out value='${cliente.telefone}' />" class="form-control" required="required">
-					</fieldset>
+					<label>Nome*</label> 
+					<input name="nome" type="text" maxlength="40" placeholder="MeuNome..." value="<c:out value='${cliente.nome}' />" class="form-control" required="required">
+
+					<label>CPF*</label> 
+					<input name="cpf" type="text" maxlength="15" placeholder="XXX.XXX.XXX-XX" value="<c:out value='${cliente.cpf}' />" class="form-control" required="required">
+		
+					<label>Telefone*</label> 
+					<input name="telefone" type="tel" maxlength="15" placeholder="(XX)XXXXX-XXXX"  value="<c:out value='${cliente.telefone}' />" class="form-control" required="required">
+						
+					<label>Nascimento</label> 
+					<input name="nascimento" type="date" maxlength="15"  value="<c:out value='${cliente.telefone}' />" class="form-control">
+				
+					<label>Endereço</label> 
+					<input name="endereco" type="text" maxlength="40" placeholder="Rua tal, núm 1234" value="<c:out value='${cliente.endereco}' />" class="form-control">
+	
+					<label>Email</label> 
+					<input name="email" type="email" maxlength="20" placeholder="exemplo@host.com" pattern="" value="<c:out value='${cliente.email}' />" class="form-control" >
 					
 					
+					
+		
 					
 					<div class="container col-md-10">
-						
 						<div class="card">
-						
-							<div class="card-body">
-							
-								<form action="dependente" method="post">
-									<legend>Dependentes</legend>
+							<div class="card-body">		
+								<fieldset class="form-group">
+									<form action="dependente" method="post">
+										<fieldset class="form-group">
+										<legend>Dependentes</legend>
+										<input type="hidden" name="action" value="insert" />
+										<input type="hidden" name="id" value="<c:out value='${cliente.id}' />" />
 									
-									<fieldset class="form-group">
 										<label>Dependente*</label> 
-										<input name="nome" type="text" maxlength="40" placeholder="MeuNome..." value="<c:out value='${cliente.nome}' />" class="form-control" required="required">
-									</fieldset>
+										<input name="nome" type="text" maxlength="20" placeholder="Dependente..." value="<c:out value='${dependente.nome}' />" class="form-control" required="required">
 									
-									<fieldset class="form-group">
 										<label>Parentesco*</label> 
-											<select name="categoria" class="form-control" required="required">
-													<option value="" selected disabled hidden="hidden">  --  Selecione --  </option>
-												<c:forEach var="categ" items="${categorias}">
-													<option value="<c:out value='${categ.id}' />" <c:if test="${filme.categoria.id == categ.id}">selected</c:if> > <c:out value="${categ.nome}" /></option>
-												</c:forEach>
-											</select>	
-										
-									</fieldset>
-									<div class="container text-right">
+										<select name="grau" class="form-control" required="required">
+												<option value="" selected disabled hidden="hidden">  --  Selecione --  </option>
+											<c:forEach var="g" items="${graus}">
+												<option value="<c:out value='${g}' />"  > <c:out value="${g}" /></option>
+											</c:forEach>
+										</select>	
+									
 										<button type="submit" class="btn btn-success">Save</button>	
-									</div>
-								</form>
-								
+										</fieldset>
+									</form>
+								</fieldset>
 								
 								<div class="row">
 						
@@ -178,43 +171,16 @@
 									</div>
 								</div>
 								
-								
-								
-								
-								
-								
+			
 								
 							</div>
 						</div>
 					</div>
 									
-					
-					
-					
-					
-					
-					
-					
-					
-					
-			
-					
-					<fieldset class="form-group">
-						
-						<label for="imagem">Imagem</label>
-						<br>
-	  					<input type="file" id="imagem" name="imagem" accept="image/*" onchange="">
-	  					<br>
-	  					<img id="img" alt="Foto de Capa" src="<c:out value='${filme.imagem}' />" style="width: 200px" />
-					</fieldset>
-					
-					<fieldset class="form-group">
-						<label for="site-search">Search the site:</label>
-						<input type="search" id="site-search" name="q" aria-label="Search through site content">
-						<button>Search</button>
-					</fieldset>
+
 					
 					<button type="submit" class="btn btn-success">Save</button>
+				</fieldset>
 				</form>
 			</div>
 		</div>
