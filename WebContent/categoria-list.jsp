@@ -77,9 +77,9 @@
 				            <td><c:out value="${categoria.preco}"/></td>
 							
 							<td>
-								<a href="categoria?action=edit&id=<c:out value='${categoria.id}' />" class="btn btn-info"><img alt="Imagem não encontrada" src="imagens/edit.png"></a>
+								<a href="categoria?action=edit&id=<c:out value='${categoria.id}' />" class="btn btn-warning"><img alt="Imagem não encontrada" src="imagens/edit.png"></a>
 									&nbsp;&nbsp;&nbsp; 
-								<a href="categoria?action=delete&id=<c:out value='${categoria.id}' />" class="btn btn-warning" type=""><img alt="Imagem não encontrada" src="imagens/delete.png"></a>
+								<a href="categoria?action=delete&id=<c:out value='${categoria.id}' />" class="btn btn-danger" type=""><img alt="Imagem não encontrada" src="imagens/delete.png"></a>
 								<form method="post" action="categoria">
 									<input type="hidden" name="id" value="<c:out value='${categoria.id}' />" />
 								</form> 
