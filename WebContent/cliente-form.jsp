@@ -156,19 +156,22 @@
 					<input name="email" type="email" maxlength="20" placeholder="exemplo@host.com" pattern="" value="<c:out value='${cliente.email}' />" class="form-control" >
 					
 					
+					<input name="dependentes" type="hidden" maxlength="40" class="form-control" >
+					
+					
 					
 					<br>					
 					<div class="card-body">		
 						<fieldset class="form-group">
 							<legend>Dependentes</legend>
 							
-							<input name="id" id="id" type="hidden" maxlength="20" value="<c:out value='${dependente.id}' />" class="form-control">
+							<input name="idDep" id="idDep" type="hidden" maxlength="20" value="<c:out value='${dependente.id}' />" class="form-control">
 							
 							<label>Dependente*</label><label class="hide" id="fullNameValidationError">This field is required.</label>
-							<input name="dependente" id="dependente" type="text" maxlength="20" placeholder="Dependente..." class="form-control">
+							<input name="nomeDep" id="nomeDep" type="text" maxlength="20" placeholder="Dependente..." class="form-control">
 						
 							<label>Parentesco*</label> 
-							<select name="grau" id="grau" class="form-control">
+							<select name="grauDep" id="grauDep" class="form-control">
 									<option value="" selected disabled hidden="hidden">  --  Selecione --  </option>
 								<c:forEach var="g" items="${graus}">
 									<option value="<c:out value='${g}' />"  > <c:out value="${g}" /></option>
@@ -177,7 +180,7 @@
 							<br>
 							
 							<div  class="form-action-buttons">
-		                        <input type="button" value="Submit" onclick="onFormSubmit()">
+		                        <input type="button" class="btn btn-success" value="Submit" onclick="onFormSubmit()">
 		                    </div>
 							
 							<div class="container text-right">
