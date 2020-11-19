@@ -119,6 +119,8 @@ public class ClienteServlet extends HttpServlet {
 		String nascimento = request.getParameter("nascimento");
 		String endereco = request.getParameter("endereco");
 		//byte[] imagem = request.getParameter("imagem");
+		
+		String dependentes = request.getParameter("dependentes");
 				
 		
 		Cliente cliente = new Cliente();
@@ -131,7 +133,15 @@ public class ClienteServlet extends HttpServlet {
 		//cliente.setImagem(imagem);
 		
 		clienteDao.insert(cliente);
+		
+		Dependente dependente = new Dependente();
+		dependente.setNome(nome);
+		dependente.setGrau(grau);
+		dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
+		dependenteDao.inserir(dependente);
 		response.sendRedirect("cliente");
+		
+		
 	}	
 	
 	

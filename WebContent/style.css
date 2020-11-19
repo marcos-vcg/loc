@@ -55,3 +55,15 @@ h1 {
 .hide{
     display:none;
 }
+
+#clicavel{
+cursor: pointer;
+}
+
+#clicavel:hover{
+color: red;
+}
+
+#clicavel:active{
+color: blue;
+}
