@@ -2,6 +2,7 @@ package control;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -10,6 +11,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
+//import org.json.simple.JSONArray;
+//import org.json.simple.JSONObject;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import bean.Cliente;
 import bean.Dependente;
@@ -120,9 +129,7 @@ public class ClienteServlet extends HttpServlet {
 		String endereco = request.getParameter("endereco");
 		//byte[] imagem = request.getParameter("imagem");
 		
-		String dependentes = request.getParameter("dependentes");
-				
-		
+			
 		Cliente cliente = new Cliente();
 		cliente.setNome(nome);
 		cliente.setCpf(cpf);
@@ -134,14 +141,66 @@ public class ClienteServlet extends HttpServlet {
 		
 		clienteDao.insert(cliente);
 		
-		Dependente dependente = new Dependente();
-		dependente.setNome(nome);
-		dependente.setGrau(grau);
-		dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
-		dependenteDao.inserir(dependente);
+		
+		// Após Inserir Cliente Insere seus Dependentes	
+		try {
+			//Percorrer um Arrray de Objetos
+			String j = request.getParameter("dependentes");
+			JSONArray jsonArray = new JSONArray(j);
+			//JSONParser jsonParser = new JSONParser(j);
+			//JSONArray jsonArray = (JSONArray) jsonParser.parse();
+			//JSONObject jsonObj = (JSONObject) jsonParser.parse();
+			//JSONArray jsonArray = jsonObj.getJSONArray("");
+			//JSONArray jsonArray = (JSONArray) new JSONParser(request.getParameter("dependentes")).parse();
+			//ArrayList<JSONArray> jsonArray =  (ArrayList<JSONArray>) jsonParser.parse();
+		
+		
+			// Percorre o Array pegando os Objetos um a um.
+			for(Object obj: jsonArray) {	
+				
+				// Pega um dos Objetos JSON
+				JSONObject jsonObect = (JSONObject) obj;
+				//LinkedHashMap<JSONObject, JSONObject> jsonObect = (LinkedHashMap) obj;
+				
+				// Pega os valores dos seus campos
+				String jNome = jsonObect.get("nomeDep").toString();
+				String jGrau = jsonObect.get("grauDep").toString();
+				
+				// Cria um Objeto JAVA seta seus atributos e Insere no BD
+				Dependente dependente = new Dependente();
+				dependente.setNome(jNome);
+				dependente.setGrau(Grau.valueOf(jGrau));
+				dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
+				
+				dependenteDao.inserir(dependente);	
+				System.out.println("Dependente Inserido no BD");
+			}
+			
+		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+				
+		/* Segunda forma com a validação do servidor
+		JSONParser parserDependentes = new JSONParser(request.getParameter("dependentes"));
+		JSONArray jDependentes = (JSONArray) parserDependentes.parse();
+			
+		// Percorre a lista até 3 dependentes, seta os atributos e adiciona ao Banco de Dados
+		for(int i=0; i<3; i++) {
+			
+			JSONObject jDependente = (JSONObject) jDependentes.get(i);
+			Dependente dependente = new Dependente();
+			dependente.setNome(jDependente.getString("nome"));
+			dependente.setGrau(Grau.valueOf(jDependente.get("grau").toString()));
+			dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
+			
+			dependenteDao.inserir(dependente);
+		}
+		*/
+		
 		response.sendRedirect("cliente");
-		
-		
 	}	
 	
 	

@@ -96,7 +96,7 @@
 					<label>Email</label> 
 					<input name="email" type="email" maxlength="20" placeholder="exemplo@host.com" pattern="" value="<c:out value='${cliente.email}' />" class="form-control" >
 					
-					<input name="dependentes" id="dependentes" type="hidden" class="form-control" value="">
+					<input name="dependentes" id="dependentes" type="hidden" class="form-control" >
 					
 					<br>
 					<br>					

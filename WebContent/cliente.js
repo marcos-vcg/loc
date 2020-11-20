@@ -14,14 +14,14 @@ let dependentes = [ ];
 
 
 //pega os dados
-dependentes.push(dependente); //adiciona contato na ultima posição
+//dependentes.push(dependente); //adiciona contato na ultima posição
 //depends.pop(); //retira ultimo
-dependentes.splice(posicaoInicial, posicaoFinal); //Elimina elemento de acordo com a posição, caso inicial seja 0 e final 2, elimina os contatos que estão na posição 0 até 2
+//dependentes.splice(posicaoInicial, posicaoFinal); //Elimina elemento de acordo com a posição, caso inicial seja 0 e final 2, elimina os contatos que estão na posição 0 até 2
 
 
 
 //por exemplo, ira mostra o nome do ultimo objeto da lista
-depend.nome.innerHTML = depends.pop( );
+//depend.nome.innerHTML = depends.pop( );
 
 
 
@@ -80,7 +80,8 @@ function inserir(dependente) {
 	
 	// Insere no array e atualiza o input hidden do form a ser enviado.
 	dependentes.push(dependente);
-	document.getElementById("dependentes").value = dependentes;
+	var myJSON = JSON.stringify(dependentes);
+	document.getElementById("dependentes").value = myJSON;
 }
 
 function limpar() {
@@ -91,20 +92,26 @@ function limpar() {
 }
 
 function editar(td) {
-    selectedRow = td.parentElement.parentElement;
-    document.getElementById("idDep").value = selectedRow.cells[0].innerHTML;
+    
+	//Pega elemento Pai duas vezes para pegar a linha selecionada
+	selectedRow = td.parentElement.parentElement;
+    
+	//Pega os elementos da linha da tabela a serem editados e preenche os campos
+	document.getElementById("idDep").value = selectedRow.cells[0].innerHTML;
     document.getElementById("nomeDep").value = selectedRow.cells[1].innerHTML;
     document.getElementById("grauDep").value = selectedRow.cells[2].innerHTML;
 }
 
 function update(dependente) {
+	
+	//Pega os elementos dos campos e atualiza o cadastro do dependente na tabela
     selectedRow.cells[0].innerHTML = dependente.idDep;
     selectedRow.cells[1].innerHTML = dependente.nomeDep;
     selectedRow.cells[2].innerHTML = dependente.grauDep;
 	
 	// Faz upgrade do elemento do array e atualiza o input hidden do form a ser enviado.
 	dependentes[selectedRow] = dependente;
-	document.getElementById("dependentes").value = dependentes;
+	document.getElementById("dependentes").value = JSON.stringfy(dependentes);
 }
 
 
@@ -114,8 +121,13 @@ function deletar(td) {
         document.getElementById("dependentesTable").deleteRow(row.rowIndex);
 		
 		// Deleta do array e atualiza o input hidden do form a ser enviado.
-		dependentes.splice(selectedRow, selectedRow+1);
-		document.getElementById("dependentes").value = dependentes;
+		if(selectedRow.cells[0].innerHTML == null){
+			dependentes.splice(selectedRow, selectedRow+1);
+		} else {
+			dependetes.push()
+		}
+		
+		document.getElementById("dependentes").value = JSON.stringfy(dependentes);
 		
 		clear();
     }
