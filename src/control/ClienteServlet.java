@@ -144,23 +144,17 @@ public class ClienteServlet extends HttpServlet {
 		
 		// Após Inserir Cliente Insere seus Dependentes	
 		try {
-			//Percorrer um Arrray de Objetos
-			String j = request.getParameter("dependentes");
-			JSONArray jsonArray = new JSONArray(j);
-			//JSONParser jsonParser = new JSONParser(j);
-			//JSONArray jsonArray = (JSONArray) jsonParser.parse();
-			//JSONObject jsonObj = (JSONObject) jsonParser.parse();
-			//JSONArray jsonArray = jsonObj.getJSONArray("");
-			//JSONArray jsonArray = (JSONArray) new JSONParser(request.getParameter("dependentes")).parse();
-			//ArrayList<JSONArray> jsonArray =  (ArrayList<JSONArray>) jsonParser.parse();
-		
-		
+			//Recebe o JSON em uma String e a armazena em um Array JSON
+			String jsonString = request.getParameter("dependentes");
+			JSONArray jsonArray = new JSONArray(jsonString);
+				//JSONArray jsonArray = (JSONArray) new JSONParser(request.getParameter("dependentes")).parse();
+
+			
 			// Percorre o Array pegando os Objetos um a um.
 			for(Object obj: jsonArray) {	
 				
 				// Pega um dos Objetos JSON
 				JSONObject jsonObect = (JSONObject) obj;
-				//LinkedHashMap<JSONObject, JSONObject> jsonObect = (LinkedHashMap) obj;
 				
 				// Pega os valores dos seus campos
 				String jNome = jsonObect.get("nomeDep").toString();
@@ -172,6 +166,7 @@ public class ClienteServlet extends HttpServlet {
 				dependente.setGrau(Grau.valueOf(jGrau));
 				dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
 				
+				//dependenteDao.selectAllOf();
 				dependenteDao.inserir(dependente);	
 				System.out.println("Dependente Inserido no BD");
 			}
