@@ -2,7 +2,6 @@ package control;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,31 +11,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.json.JSONParser;
-import org.apache.tomcat.util.json.ParseException;
-//import org.json.simple.JSONArray;
-//import org.json.simple.JSONObject;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import bean.Cliente;
 import bean.Dependente;
 import bean.Grau;
+import bean.Locacao;
 import dao.DataSource;
 import dao.ClienteDao;
 import dao.DependenteDao;
+import dao.FilmeDao;
+import dao.LocacaoDao;
 
 
 /**
- * Servlet implementation class ClienteServlet
+ * Servlet implementation class LocacaoServlet
  */
-@WebServlet(name="ClienteServlet", urlPatterns = {"/cliente"})
-public class ClienteServlet extends HttpServlet {
+@WebServlet(name="LocacaoServlet", urlPatterns = {"/locacao"})
+public class LocacaoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DataSource dataSource;
 	private ClienteDao clienteDao;  
 	private DependenteDao dependenteDao;
+	private FilmeDao filmeDao;
+	private LocacaoDao locacaoDao;
 	
 	
     /**
@@ -46,6 +45,8 @@ public class ClienteServlet extends HttpServlet {
     	dataSource = new DataSource();
     	clienteDao = new ClienteDao(dataSource);
     	dependenteDao = new DependenteDao(dataSource);
+    	filmeDao = new FilmeDao(dataSource);
+    	locacaoDao = new LocacaoDao(dataSource);
     }
 
     
@@ -88,6 +89,10 @@ public class ClienteServlet extends HttpServlet {
 				
 				case ("update"):
 					update(request, response);
+					break;
+					
+				case ("select"):
+					select(request, response);
 					break;
 					
 				case ("search"):
@@ -180,24 +185,6 @@ public class ClienteServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 			
-				
-		/* Segunda forma com a valida��o do servidor
-		JSONParser parserDependentes = new JSONParser(request.getParameter("dependentes"));
-		JSONArray jDependentes = (JSONArray) parserDependentes.parse();
-			
-		// Percorre a lista at� 3 dependentes, seta os atributos e adiciona ao Banco de Dados
-		for(int i=0; i<3; i++) {
-			
-			JSONObject jDependente = (JSONObject) jDependentes.get(i);
-			Dependente dependente = new Dependente();
-			dependente.setNome(jDependente.getString("nome"));
-			dependente.setGrau(Grau.valueOf(jDependente.get("grau").toString()));
-			dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
-			
-			dependenteDao.inserir(dependente);
-		}
-		*/
-		
 		response.sendRedirect("cliente");
 	}	
 	
@@ -328,7 +315,7 @@ public class ClienteServlet extends HttpServlet {
 			// Preenche os elementos da Lista Filtrada
 			List<Cliente> clientes = clienteDao.search(busca);
 			request.setAttribute("clientes", clientes);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-list.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("locacao-list.jsp");
 			dispatcher.forward(request, response);
 
 		} catch (Exception e) {
@@ -337,14 +324,34 @@ public class ClienteServlet extends HttpServlet {
 	
 	}
 
+	
+	
+	// Select 
+	private void select(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
+		try {
+			// Preenche os elementos da Lista Padrao
+			int id = Integer.parseInt(request.getParameter("id"));
+			List<Locacao> locacoes = locacaoDao.filmesDoCLiente(id);
+			request.setAttribute("locacoes", locacoes);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("locacao-form.jsp");
+			dispatcher.forward(request, response);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 	// Default
 	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		try {
-			// Preenche os elementos da Lista Padr�o
+			// Preenche os elementos da Lista Padrao
 			List<Cliente> clientes = clienteDao.selectAll();
 			request.setAttribute("clientes", clientes);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-list.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("locacao-list.jsp");
 			dispatcher.forward(request, response);
 
 		} catch (Exception e) {

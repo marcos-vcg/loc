@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.Categoria;
+import bean.Cliente;
 import bean.Filme;
 import bean.Genero;
 import dao.CategoriaDao;
@@ -81,6 +82,10 @@ public class FilmeServlet extends HttpServlet {
 				
 				case ("update"):
 					update(request, response);
+					break;
+					
+				case ("search"):
+					search(request, response);
 					break;
 					
 				default: 
@@ -208,6 +213,26 @@ public class FilmeServlet extends HttpServlet {
 		filmeDao.update(filme);
 		response.sendRedirect("filme");
 	}	
+	
+
+	// Search - Filtra a Lista
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
+		// Recebe o parametro a ser buscado e concatena com o elemento % para pegar elementos parecidos e não exatamente iguais
+		String busca = request.getParameter("txtBusca");
+		
+		try {
+			// Preenche os elementos da Lista Filtrada
+			List<Filme> filmes = filmeDao.search(busca);
+			request.setAttribute("filmes", filmes);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("filme-list.jsp");
+			dispatcher.forward(request, response);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+	}
 	
 	
 	// Default

@@ -10,11 +10,11 @@
 			integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 			crossorigin="anonymous">
 		
-		<script type="text/javascript" src="cliente.js" DEFER="DEFER"></script>
+		<script type="text/javascript" src="js/cliente.js" DEFER="DEFER"></script>
 		<link rel="icon" href="imagens/favicon.png">
 	</head>
 	
-	<body onload="initPage()">
+	<body>
 		<header>
 			<nav class="navbar navbar-expand-md navbar-dark" style="background-color: blue">
 				<a href="http://localhost:8080/loc/" class="navbar-brand"> Locadora Digital </a>
@@ -110,11 +110,11 @@
 								</div>
 								
 								<br>
-								
+									
 							</fieldset>
 							
 						
-							<h5 class="text-center">Lista de Dependentes</h3>
+							<h5 class="text-center">Lista de Dependentes</h5>
 							
 							<table id="dependentesTable" class="table table-bordered" style="text-align:center;">
 								<thead>
@@ -148,12 +148,11 @@
 									</c:forEach>
 								</tbody>
 							</table>
-						
-	
 						</div>
 					
 						<br>
 						<br>
+						
 						<div class="container text-right">
 							<a href="cliente" class="btn btn-danger">Cancel</a>
 							&nbsp;&nbsp;

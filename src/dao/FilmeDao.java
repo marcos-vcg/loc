@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import bean.Cliente;
 import bean.Filme;
 
 public class FilmeDao {
@@ -99,6 +100,50 @@ public class FilmeDao {
 	}
 	
 
+	
+	// Search - Aplica um filtro que busca todos pelo parametro passado
+	public ArrayList<Filme> search(String busca){
+			
+		ArrayList<Filme> lista = new ArrayList<Filme>();
+		
+		try {
+			String SQL = "SELECT * FROM " + tabela + " where titulo LIKE ? OR genero LIKE ? ORDER BY titulo;";
+			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
+			
+			busca = "%"+busca+"%";
+			ps.setString(1, busca);
+			ps.setString(2, busca);
+	
+			ResultSet rs = ps.executeQuery();
+						
+			while(rs.next()) {
+				Filme filme = new Filme();
+				filme.setId(rs.getInt("id"));
+				filme.setTitulo(rs.getString("titulo"));
+				filme.setGenero(generoDao.select(rs.getInt("genero")));
+				filme.setCopias(rs.getInt("copias"));
+				filme.setSinopse(rs.getString("sinopse"));
+				filme.setDuracao(rs.getString("duracao"));
+				filme.setLancamento(rs.getString("lancamento"));
+				filme.setImagem(rs.getBytes("imagem"));
+				filme.setCategoria(categoriaDao.select(rs.getInt("categoria")));
+				System.out.println("Filme lido");
+				
+				if(filme.getId() != null ) {
+					lista.add(filme);
+				}
+				
+			}
+			ps.close();
+			
+		} catch(SQLException ex) {
+			System.err.println("Erro ao Recuperar cliente " + ex.getMessage());
+		} catch(Exception ex) {
+			System.err.println("Erro Geral " + ex.getMessage());
+		}
+		return lista;
+	}
+	
 	
 	public Boolean insert(Filme f) {
 		
