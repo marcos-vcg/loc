@@ -5,7 +5,7 @@ import java.util.List;
 
 public enum Grau {
 
-	Selecione(""), AVO("Avo"), PAI("Pai"), FILHO("Filho"), TIO("Tio"), SOBRINHO("Sobrinho"), CONJUJE("Cônjuje");
+	Selecione(""), AVO("Avo"), PAI("Pai"), FILHO("Filho"), TIO("Tio"), SOBRINHO("Sobrinho"), CONJUGE("Conjuge");
 	
 	private String descricao;
 	

@@ -24,6 +24,7 @@
 				</ul>				
 			</nav>
 		</header>
+		
 		<br>
 
 		<div class="row">
@@ -33,9 +34,9 @@
 				
 				<div class="navbar">	
 					<a href="<%=request.getContextPath()%>/cliente?action=new" class="btn btn-success">Novo Cliente</a>
-					<form class="form-inline">
-						<input class="form-control" type="search" name="txtBuscar">
-						<input type="submit" value="buscar" class="btn btn-outline-success" name="acao">
+					<form class="form-inline" action="cliente">
+						<input class="form-control" type="text" name="txtBusca">
+						<input type="submit" value="search" class="btn btn-outline-success" name="action">
 					</form>
 				</div>	
 				

@@ -146,7 +146,7 @@ public class ClienteServlet extends HttpServlet {
 		clienteDao.insert(cliente);
 		
 		
-		// Apï¿½s Inserir Cliente Insere seus Dependentes	
+		// Apos Inserir Cliente Insere seus Dependentes	
 		try {
 			//Recebe o JSON em uma String e a armazena em um Array JSON
 			String jsonString = request.getParameter("dependentes");
@@ -216,7 +216,7 @@ public class ClienteServlet extends HttpServlet {
 	}	
 
 	
-	// Pï¿½gina de Ediï¿½ï¿½o
+	// Pagina de Edicao
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -266,6 +266,56 @@ public class ClienteServlet extends HttpServlet {
 		//cliente.setImagem(imagem);
 		
 		clienteDao.update(cliente);
+		
+		// Apos Atualizar Cliente Atualiza seus Dependentes	
+		try {
+			//Recebe o JSON em uma String e a armazena em um Array JSON
+			String jsonString = request.getParameter("dependentes");
+			JSONArray jsonArray = new JSONArray(jsonString);
+			
+			// Percorre o Array pegando os Objetos um a um.
+			for(Object obj: jsonArray) {	
+				
+				// Pega um dos Objetos JSON
+				JSONObject jsonObect = (JSONObject) obj;
+				
+				// Cria um Objeto JAVA seta seus atributos para alterar no BD
+				Dependente dependente = new Dependente();
+				
+				String jNome = jsonObect.get("nomeDep").toString();
+				dependente.setNome(jNome);
+				
+				String jGrau = jsonObect.get("grauDep").toString();
+				dependente.setGrau(Grau.valueOf(jGrau));
+				
+				String jAcao = jsonObect.get("acaoDep").toString();
+				dependente.setTitular(cliente);			
+				
+				
+				switch(jAcao) {
+					case ("inserir"):
+						dependenteDao.inserir(dependente);
+						break;
+						
+					case ("apagar"):
+						dependente.setId(Integer.parseInt(jsonObect.get("idDep").toString()));
+						dependenteDao.apagar(dependente.getId());
+						break;
+						
+					case ("editar"):
+						dependente.setId(Integer.parseInt(jsonObect.get("idDep").toString()));
+						dependenteDao.editar(dependente);
+						break;
+				}
+			System.out.println("Dependente Modificado no BD");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
 		response.sendRedirect("cliente");
 	}	
 	
@@ -273,8 +323,9 @@ public class ClienteServlet extends HttpServlet {
 	// Search - Filtra a Lista
 	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 
+		// Recebe o parametro a ser buscado e concatena com o elemento % para pegar elementos parecidos e não exatamente iguais
 		String busca = request.getParameter("txtBusca");
-
+		
 		try {
 			// Preenche os elementos da Lista Filtrada
 			List<Cliente> clientes = clienteDao.search(busca);

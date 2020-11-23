@@ -1,33 +1,15 @@
 // Linha selecionada para edição começa nula
-var selectedRow = null
+var selectedRow = null;
 
 //array para que os dependentes sejam armazenados
 let dependentes = [ ];
 
-
-//objeto dependente com os elementos da página
-//let depend = {
-//id: document.querySelector("#campo-id"),
-//nome: document.querySelector("#campo-nome"),
-//grau: document.querySelector("#campo-grau"),
-//};
-
-
-//pega os dados
-//dependentes.push(dependente); //adiciona contato na ultima posição
-//depends.pop(); //retira ultimo
-//dependentes.splice(posicaoInicial, posicaoFinal); //Elimina elemento de acordo com a posição, caso inicial seja 0 e final 2, elimina os contatos que estão na posição 0 até 2
+// Array para enviar para a Servlet poder primeiro editar e excluir e por fim editar (Evitar adicionar um quarto dependente antes de excluir o anterior)
+let dependentesInvertido = [ ];
 
 
 
-//por exemplo, ira mostra o nome do ultimo objeto da lista
-//depend.nome.innerHTML = depends.pop( );
-
-
-
-
-
-function onFormSubmit() {
+function salvarDependente() {
     if (validar()) {
         var dependente = lerCampos();
         if (selectedRow == null){
@@ -61,8 +43,11 @@ function lerCampos() {
 }
 
 function inserir(dependente) {
+	
+	dependente["acaoDep"] = "inserir";
     var table = document.getElementById("dependentesTable").getElementsByTagName('tbody')[0];
-    var newRow = table.insertRow(table.length);
+    var newRow = table.insertRow(0);
+	//var newRow = table.insertRow(table.length); Insere linha no final da tabela
     cell1 = newRow.insertCell(0);
     cell1.innerHTML = dependente.idDep;
     cell2 = newRow.insertCell(1);
@@ -79,9 +64,21 @@ function inserir(dependente) {
 					  									<path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></a>`;
 	
 	// Insere no array e atualiza o input hidden do form a ser enviado.
-	dependentes.push(dependente);
-	var myJSON = JSON.stringify(dependentes);
+	//dependentes.push(dependente); INSERE NO FINAL DO ARRAY
+	// INSERE NO INÍCIO DO ARRAY
+	dependentes.unshift(dependente); 
+	
+	// Inverte para enviar ao Servlet ao contrário para primeiro fazer as alterações ou
+	// exclusões nos dependentes já existentes e só por ultimo inserir os novos	evitando 
+	// ficar com mais de 3 dependentes ao tentar inserir antes de ecluir.
+	dependentesInvertido = dependentes.slice(0).reverse(); 
+	
+	var myJSON = JSON.stringify(dependentesInvertido);
 	document.getElementById("dependentes").value = myJSON;
+	
+	console.log(dependentes);
+	console.log(dependentesInvertido);
+	
 }
 
 function limpar() {
@@ -89,6 +86,7 @@ function limpar() {
     document.getElementById("nomeDep").value = "";
     document.getElementById("grauDep").value = "";
     selectedRow = null;
+	
 }
 
 function editar(td) {
@@ -102,35 +100,94 @@ function editar(td) {
     document.getElementById("grauDep").value = selectedRow.cells[2].innerHTML;
 }
 
-function update(dependente) {
+function update(dep) {
+	
+	var linhaSelecionada = selectedRow;
+	var indiceLinha = linhaSelecionada.rowIndex;
 	
 	//Pega os elementos dos campos e atualiza o cadastro do dependente na tabela
-    selectedRow.cells[0].innerHTML = dependente.idDep;
-    selectedRow.cells[1].innerHTML = dependente.nomeDep;
-    selectedRow.cells[2].innerHTML = dependente.grauDep;
+    selectedRow.cells[0].innerHTML = dep.idDep;
+    selectedRow.cells[1].innerHTML = dep.nomeDep;
+    selectedRow.cells[2].innerHTML = dep.grauDep;
 	
 	// Faz upgrade do elemento do array e atualiza o input hidden do form a ser enviado.
-	dependentes[selectedRow] = dependente;
-	document.getElementById("dependentes").value = JSON.stringfy(dependentes);
+	//dependentes[selectedRow] = dependente;
+	//document.getElementById("dependentes").value = JSON.stringfy(dependentes);
+	
+	// Caso o elemento não tenha um ID
+		if(linhaSelecionada.cells[0].innerHTML == ""){
+			// Pega o elemento do array -1 pois considera o cabeçalho da tabela como elemento
+			var indiceArray = indiceLinha - 1;
+			// Substitui o elemento do array
+			dependentes.splice(indiceArray, 1, dependente);
+		} else {
+			
+			// Caso o elemento possua um ID envia as informações a serem alteradas
+			var dependent = {}; //Objeto com pares chave: valor
+	
+			dependent["idDep"] =  dep.idDep;
+			dependent["nomeDep"] = dep.nomeDep;
+   			dependent["grauDep"] = dep.grauDep;
+
+		    dependent["acaoDep"] = "editar";
+			dependentes.push(dependent);
+		}
+	
+	// Inverte para enviar ao Servlet ao contrário para primeiro fazer as alterações ou
+	// exclusões nos dependentes já existentes e só por ultimo inserir os novos	evitando 
+	// ficar com mais de 3 dependentes ao tentar inserir antes de ecluir.
+	dependentesInvertido = dependentes.slice(0).reverse(); 
+	
+	// Atualiza o input hidden do form a ser enviado.
+	var myJSON = JSON.stringify(dependentesInvertido);
+	document.getElementById("dependentes").value = myJSON;
+	
+	console.log(dependentes);
+	console.log(dependentesInvertido);
 }
 
 
 function deletar(td) {
+	
     if (confirm('Tem certeza que quer deletar?')) {
-        row = td.parentElement.parentElement;
-        document.getElementById("dependentesTable").deleteRow(row.rowIndex);
+        var linhaSelecionada = td.parentElement.parentElement;
+		var indiceLinha = linhaSelecionada.rowIndex;
 		
-		// Deleta do array e atualiza o input hidden do form a ser enviado.
-		if(selectedRow.cells[0].innerHTML == null){
-			dependentes.splice(selectedRow, selectedRow+1);
+        document.getElementById("dependentesTable").deleteRow(indiceLinha);
+		
+		// Caso o elemento não tenha um ID
+		if(linhaSelecionada.cells[0].innerHTML == ""){
+			// Deleta o elemento do array -1 pois considera o cabeçalho da tabela como elemento
+			var indiceArray = indiceLinha - 1;
+			dependentes.splice(indiceArray, 1);
+			
 		} else {
-			dependetes.push()
+			
+			var dependent = {}; //Objeto com pares chave: valor
+	
+			dependent["idDep"] =  linhaSelecionada.cells[0].innerHTML;
+			dependent["nomeDep"] =  linhaSelecionada.cells[1].innerHTML;
+			dependent["grauDep"] =  linhaSelecionada.cells[2].innerHTML;
+		    dependent["acaoDep"] = "apagar";
+			dependentes.push(dependent);
 		}
 		
-		document.getElementById("dependentes").value = JSON.stringfy(dependentes);
 		
-		clear();
+		
+		limpar();
     }
+
+	// Inverte para enviar ao Servlet ao contrário para primeiro fazer as alterações ou
+	// exclusões nos dependentes já existentes e só por ultimo inserir os novos	evitando 
+	// ficar com mais de 3 dependentes ao tentar inserir antes de ecluir.
+	dependentesInvertido = dependentes.slice(0).reverse(); 	
+	
+	// Atualiza o input hidden do form a ser enviado.
+	var myJSON = JSON.stringify(dependentesInvertido);
+	document.getElementById("dependentes").value = myJSON;
+	
+	console.log(dependentes);
+	console.log(dependentesInvertido);
 }
 
 

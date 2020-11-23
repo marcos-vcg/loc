@@ -123,15 +123,17 @@ public class ClienteDao {
 
 	// Search - Aplica um filtro que busca todos pelo parametro passado
 	public ArrayList<Cliente> search(String busca){
-		
+			
 		ArrayList<Cliente> lista = new ArrayList<Cliente>();
 		
 		try {
-			String SQL = "SELECT * FROM " + tabela + " where id like ? or nome like ? or cpf like ? ORDER BY nome;";
+			String SQL = "SELECT * FROM " + tabela + " where nome LIKE ? OR cpf LIKE ? ORDER BY nome;";
 			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
+			
+			busca = "%"+busca+"%";
 			ps.setString(1, busca);
 			ps.setString(2, busca);
-			ps.setString(3, busca);
+	
 			ResultSet rs = ps.executeQuery();
 						
 			while(rs.next()) {
