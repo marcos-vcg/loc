@@ -120,6 +120,49 @@ public class ClienteDao {
 		return lista;
 	}
 	
+
+	// Search - Aplica um filtro que busca todos pelo parametro passado
+	public ArrayList<Cliente> search(String busca){
+		
+		ArrayList<Cliente> lista = new ArrayList<Cliente>();
+		
+		try {
+			String SQL = "SELECT * FROM " + tabela + " where id like ? or nome like ? or cpf like ? ORDER BY nome;";
+			java.sql.PreparedStatement ps = dataSource.getConnection().prepareStatement(SQL);
+			ps.setString(1, busca);
+			ps.setString(2, busca);
+			ps.setString(3, busca);
+			ResultSet rs = ps.executeQuery();
+						
+			while(rs.next()) {
+				Cliente cliente = new Cliente();
+				
+				cliente.setId(rs.getInt("id"));
+				cliente.setNome(rs.getString("nome"));
+				cliente.setCpf(rs.getString("cpf"));
+				cliente.setTelefone(rs.getString("telefone"));
+				cliente.setEmail(rs.getString("email"));
+				cliente.setNascimento(rs.getString("nascimento"));
+				cliente.setEndereco(rs.getString("endereco"));
+				cliente.setImagem(rs.getBytes("imagem"));
+				
+				System.out.println("Cliente lido");
+				
+				
+				if(cliente.getId() != null) {
+					lista.add(cliente);
+				}
+				
+			}
+			ps.close();
+			
+		} catch(SQLException ex) {
+			System.err.println("Erro ao Recuperar cliente " + ex.getMessage());
+		} catch(Exception ex) {
+			System.err.println("Erro Geral " + ex.getMessage());
+		}
+		return lista;
+	}	
 	
 	
 	public boolean insert(Cliente c) {
@@ -199,7 +242,7 @@ public class ClienteDao {
 	
 	
 	
-	// Trata os erros de todas as excessões das chamadas SQL
+	// Trata os erros de todas as excessï¿½es das chamadas SQL
 		private void printSQLException(SQLException ex) {
 			for (Throwable e : ex) {
 				if (e instanceof SQLException) {

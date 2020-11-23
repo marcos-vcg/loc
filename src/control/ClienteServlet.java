@@ -90,6 +90,10 @@ public class ClienteServlet extends HttpServlet {
 					update(request, response);
 					break;
 					
+				case ("search"):
+					search(request, response);
+					break;
+
 				default: 
 					list(request, response);
 					break;
@@ -142,7 +146,7 @@ public class ClienteServlet extends HttpServlet {
 		clienteDao.insert(cliente);
 		
 		
-		// Após Inserir Cliente Insere seus Dependentes	
+		// Apï¿½s Inserir Cliente Insere seus Dependentes	
 		try {
 			//Recebe o JSON em uma String e a armazena em um Array JSON
 			String jsonString = request.getParameter("dependentes");
@@ -178,11 +182,11 @@ public class ClienteServlet extends HttpServlet {
 		}
 			
 				
-		/* Segunda forma com a validação do servidor
+		/* Segunda forma com a validaï¿½ï¿½o do servidor
 		JSONParser parserDependentes = new JSONParser(request.getParameter("dependentes"));
 		JSONArray jDependentes = (JSONArray) parserDependentes.parse();
 			
-		// Percorre a lista até 3 dependentes, seta os atributos e adiciona ao Banco de Dados
+		// Percorre a lista atï¿½ 3 dependentes, seta os atributos e adiciona ao Banco de Dados
 		for(int i=0; i<3; i++) {
 			
 			JSONObject jDependente = (JSONObject) jDependentes.get(i);
@@ -212,7 +216,7 @@ public class ClienteServlet extends HttpServlet {
 	}	
 
 	
-	// Página de Edição
+	// Pï¿½gina de Ediï¿½ï¿½o
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -221,7 +225,7 @@ public class ClienteServlet extends HttpServlet {
 		ArrayList<Grau> graus;
 		
 		try {
-			// busca o genero a ser editado e repassa para a pagina de edição
+			// busca o genero a ser editado e repassa para a pagina de ediï¿½ï¿½o
 			cliente = clienteDao.select(id);
 			dependentes = dependenteDao.selectAllOf(id);
 			graus = Grau.getGraus();
@@ -265,12 +269,30 @@ public class ClienteServlet extends HttpServlet {
 		response.sendRedirect("cliente");
 	}	
 	
+
+	// Search - Filtra a Lista
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+
+		String busca = request.getParameter("txtBusca");
+
+		try {
+			// Preenche os elementos da Lista Filtrada
+			List<Cliente> clientes = clienteDao.search(busca);
+			request.setAttribute("clientes", clientes);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-list.jsp");
+			dispatcher.forward(request, response);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	
+	}
+
 	// Default
 	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		try {
-			// Preenche os elementos da Lista Padrão
+			// Preenche os elementos da Lista Padrï¿½o
 			List<Cliente> clientes = clienteDao.selectAll();
 			request.setAttribute("clientes", clientes);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("cliente-list.jsp");
