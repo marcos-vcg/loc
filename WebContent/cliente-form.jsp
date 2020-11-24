@@ -151,6 +151,7 @@
 					
 						<br>
 						<br>
+						<br>
 						
 						<div class="container text-right">
 							<a href="cliente" class="btn btn-danger">Cancel</a>

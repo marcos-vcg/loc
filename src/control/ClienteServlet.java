@@ -145,14 +145,12 @@ public class ClienteServlet extends HttpServlet {
 		
 		clienteDao.insert(cliente);
 		
-		
+
 		// Apos Inserir Cliente Insere seus Dependentes	
 		try {
 			//Recebe o JSON em uma String e a armazena em um Array JSON
 			String jsonString = request.getParameter("dependentes");
 			JSONArray jsonArray = new JSONArray(jsonString);
-				//JSONArray jsonArray = (JSONArray) new JSONParser(request.getParameter("dependentes")).parse();
-
 			
 			// Percorre o Array pegando os Objetos um a um.
 			for(Object obj: jsonArray) {	
@@ -171,21 +169,24 @@ public class ClienteServlet extends HttpServlet {
 				dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
 				
 				//dependenteDao.selectAllOf();
-				dependenteDao.inserir(dependente);	
-				System.out.println("Dependente Inserido no BD");
-			}
-			
+				
+				int quantidade = dependenteDao.selectAllOf(clienteDao.selectLast()).size();
+				if(quantidade < 3) {
+					dependenteDao.inserir(dependente);
+					System.out.println("Dependente Inserido no BD");
+				}	
+			}		
 		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 			
 				
-		/* Segunda forma com a valida��o do servidor
+		/* Segunda forma com a validacao do servidor
 		JSONParser parserDependentes = new JSONParser(request.getParameter("dependentes"));
 		JSONArray jDependentes = (JSONArray) parserDependentes.parse();
 			
-		// Percorre a lista at� 3 dependentes, seta os atributos e adiciona ao Banco de Dados
+		// Percorre a lista ate 3 dependentes, seta os atributos e adiciona ao Banco de Dados
 		for(int i=0; i<3; i++) {
 			
 			JSONObject jDependente = (JSONObject) jDependentes.get(i);
@@ -293,7 +294,11 @@ public class ClienteServlet extends HttpServlet {
 				
 				switch(jAcao) {
 					case ("inserir"):
-						dependenteDao.inserir(dependente);
+						int quantidade = dependenteDao.selectAllOf(id).size();
+						if(quantidade < 3) {
+							dependenteDao.inserir(dependente);
+						}
+						
 						break;
 						
 					case ("apagar"):

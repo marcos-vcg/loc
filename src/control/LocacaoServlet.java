@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 
 import bean.Cliente;
 import bean.Dependente;
+import bean.Filme;
 import bean.Grau;
 import bean.Locacao;
 import dao.DataSource;
@@ -71,35 +73,50 @@ public class LocacaoServlet extends HttpServlet {
 					
 			switch(action) {
 			
+					// Funções Relacionadas a Locação em Si
+			
 				case ("new"):
+					// Abrir o modal para selecionar filme
 					showNewForm(request, response);
 					break;
 			
 				case ("insert"):
+					// Inserir locação do filme selecionado no modal
 					insert(request, response);
 					break;
 					
-				case ("delete"):
+				case ("update"):
+					// Atualiza status para devolvido
+					update(request, response);
+					break;
+				
+					
+			  /*case ("delete"):
+					// Não tem exclusão, uma vez locado só pode devolver
 					delete(request, response);
 					break;
 				
 				case ("edit"):
+					// Não tem edição, uma vez locado só pode devolver
 					showEditForm(request, response);
-					break;
+					break;*/
 				
-				case ("update"):
-					update(request, response);
-					break;
+
+					
+					// Funções Relacionadas aos Clientes
 					
 				case ("select"):
+					// Seleciona um Cliente e encaminha pra página de Locação dele.
 					select(request, response);
 					break;
 					
 				case ("search"):
+					// Busca Clientes com nome da busca
 					search(request, response);
 					break;
 
 				default: 
+					// Mostra todos os cliente na página inicial de locação
 					list(request, response);
 					break;
 			}
@@ -110,8 +127,11 @@ public class LocacaoServlet extends HttpServlet {
 	}
 
 	
-	// Redirect to New Page
+	// Redirect to New Page => Nova locação é feita através de um MODAL
 	private void showNewForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		
 		
 		ArrayList<Grau> graus;
 		
@@ -130,66 +150,52 @@ public class LocacaoServlet extends HttpServlet {
 	// Insert
 	private void insert(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
-		String nome = request.getParameter("nome");
-		String cpf = request.getParameter("cpf");
-		String telefone = request.getParameter("telefone");
-		String email = request.getParameter("email");
-		String nascimento = request.getParameter("nascimento");
-		String endereco = request.getParameter("endereco");
-		//byte[] imagem = request.getParameter("imagem");
+		int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+		int idFilme = Integer.parseInt(request.getParameter("idFilme"));
 		
+		
+		Cliente cliente = clienteDao.select(idCliente);
+		Locacao locacao = new Locacao();
+		
+		locacao.setCliente(cliente);
+		locacao.setFilme(filmeDao.select(idFilme));
+		locacao.setLocacao(new Date());
+		
+		List<Locacao> locacoes = locacaoDao.filmesDoCLiente(cliente.getId());
+		long hoje = new Date().getTime();
+		boolean atrasado = false;
+		
+		for(Locacao l: locacoes) {
+			long loc = l.getLocacao().getTime();
+			long diff = (hoje - loc)/(1000*60*60*24);
 			
-		Cliente cliente = new Cliente();
-		cliente.setNome(nome);
-		cliente.setCpf(cpf);
-		cliente.setTelefone(telefone);
-		cliente.setEmail(email);
-		cliente.setNascimento(nascimento);
-		cliente.setEndereco(endereco);
-		//cliente.setImagem(imagem);
-		
-		clienteDao.insert(cliente);
-		
-		
-		// Apos Inserir Cliente Insere seus Dependentes	
-		try {
-			//Recebe o JSON em uma String e a armazena em um Array JSON
-			String jsonString = request.getParameter("dependentes");
-			JSONArray jsonArray = new JSONArray(jsonString);
-				//JSONArray jsonArray = (JSONArray) new JSONParser(request.getParameter("dependentes")).parse();
-
-			
-			// Percorre o Array pegando os Objetos um a um.
-			for(Object obj: jsonArray) {	
-				
-				// Pega um dos Objetos JSON
-				JSONObject jsonObect = (JSONObject) obj;
-				
-				// Pega os valores dos seus campos
-				String jNome = jsonObect.get("nomeDep").toString();
-				String jGrau = jsonObect.get("grauDep").toString();
-				
-				// Cria um Objeto JAVA seta seus atributos e Insere no BD
-				Dependente dependente = new Dependente();
-				dependente.setNome(jNome);
-				dependente.setGrau(Grau.valueOf(jGrau));
-				dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
-				
-				//dependenteDao.selectAllOf();
-				dependenteDao.inserir(dependente);	
-				System.out.println("Dependente Inserido no BD");
-			}
-			
-		
-		} catch (Exception e) {
-			e.printStackTrace();
+			if(diff > 7) {
+				atrasado = true;
+			} 	
 		}
+		
+		if(!atrasado) {
+			locacaoDao.inserir(locacao);
+			System.out.println("Nova Locação Inserida!");
+		} else {
+			System.out.println("Locação não Inserida, Filmes em atraso!");
+		}
+		
 			
-		response.sendRedirect("cliente");
+		// Redireciona para a página de locações do mesmo cliente atualizando o filme devolvido
+		List<Filme> filmes = filmeDao.selectAll();
+		locacoes = locacaoDao.filmesDoCLiente(cliente.getId());
+		
+		request.setAttribute("cliente", cliente);
+		request.setAttribute("locacoes", locacoes);
+		request.setAttribute("filmes", filmes);
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("locacao-form.jsp");
+		dispatcher.forward(request, response);
 	}	
 	
 	
-	// Delete
+	// Delete não está sendo usado pois não é possível Excluir uma locação
 	private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -202,7 +208,7 @@ public class LocacaoServlet extends HttpServlet {
 	}	
 
 	
-	// Pagina de Edicao
+	// Pagina de Edicao Não está sendo usado pois não é possível editar uma locacao
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -231,81 +237,31 @@ public class LocacaoServlet extends HttpServlet {
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
+		Locacao locacao = locacaoDao.busca(id);
+		locacao.setDevolucao(new Date());
+		locacaoDao.editar(locacao);
 		
-		String nome = request.getParameter("nome");
-		String cpf = request.getParameter("cpf");
-		String telefone = request.getParameter("telefone");
-		String email = request.getParameter("email");
-		String nascimento = request.getParameter("nascimento");
-		String endereco = request.getParameter("endereco");
-		//byte[] imagem = request.getParameter("imagem");
+		System.out.println("Filme Devolvido!");
 		
-		
-		Cliente cliente = new Cliente();
-		cliente.setId(id);
-		cliente.setNome(nome);
-		cliente.setCpf(cpf);
-		cliente.setTelefone(telefone);
-		cliente.setEmail(email);
-		cliente.setNascimento(nascimento);
-		cliente.setEndereco(endereco);
-		//cliente.setImagem(imagem);
-		
-		clienteDao.update(cliente);
-		
-		// Apos Atualizar Cliente Atualiza seus Dependentes	
-		try {
-			//Recebe o JSON em uma String e a armazena em um Array JSON
-			String jsonString = request.getParameter("dependentes");
-			JSONArray jsonArray = new JSONArray(jsonString);
-			
-			// Percorre o Array pegando os Objetos um a um.
-			for(Object obj: jsonArray) {	
-				
-				// Pega um dos Objetos JSON
-				JSONObject jsonObect = (JSONObject) obj;
-				
-				// Cria um Objeto JAVA seta seus atributos para alterar no BD
-				Dependente dependente = new Dependente();
-				
-				String jNome = jsonObect.get("nomeDep").toString();
-				dependente.setNome(jNome);
-				
-				String jGrau = jsonObect.get("grauDep").toString();
-				dependente.setGrau(Grau.valueOf(jGrau));
-				
-				String jAcao = jsonObect.get("acaoDep").toString();
-				dependente.setTitular(cliente);			
-				
-				
-				switch(jAcao) {
-					case ("inserir"):
-						dependenteDao.inserir(dependente);
-						break;
-						
-					case ("apagar"):
-						dependente.setId(Integer.parseInt(jsonObect.get("idDep").toString()));
-						dependenteDao.apagar(dependente.getId());
-						break;
-						
-					case ("editar"):
-						dependente.setId(Integer.parseInt(jsonObect.get("idDep").toString()));
-						dependenteDao.editar(dependente);
-						break;
-				}
-			System.out.println("Dependente Modificado no BD");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// Redireciona para a página de locações do mesmo cliente atualizando o filme devolvido
 		
 		
+		// Redireciona para a página de locações do mesmo cliente atualizando o filme devolvido
+		Cliente cliente = locacao.getCliente();
+		request.setAttribute("cliente", cliente);
 		
-		response.sendRedirect("cliente");
+		List<Locacao> locacoes = locacaoDao.filmesDoCLiente(cliente.getId());
+		request.setAttribute("locacoes", locacoes);
+		
+		List<Filme> filmes = filmeDao.selectAll();
+		request.setAttribute("filmes", filmes);
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("locacao-form.jsp");
+		dispatcher.forward(request, response);
 	}	
 	
 
-	// Search - Filtra a Lista
+	// Search - Filtra a Lista de Clientes
 	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 
 		// Recebe o parametro a ser buscado e concatena com o elemento % para pegar elementos parecidos e não exatamente iguais
@@ -332,8 +288,16 @@ public class LocacaoServlet extends HttpServlet {
 		try {
 			// Preenche os elementos da Lista Padrao
 			int id = Integer.parseInt(request.getParameter("id"));
+			
 			List<Locacao> locacoes = locacaoDao.filmesDoCLiente(id);
 			request.setAttribute("locacoes", locacoes);
+			
+			Cliente cliente = clienteDao.select(id);
+			request.setAttribute("cliente", cliente);
+			
+			List<Filme> filmes = filmeDao.selectAll();
+			request.setAttribute("filmes", filmes);
+			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("locacao-form.jsp");
 			dispatcher.forward(request, response);
 
@@ -344,7 +308,7 @@ public class LocacaoServlet extends HttpServlet {
 	
 	
 	
-	// Default
+	// Default Página Inicial com todos os clientes
 	private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		try {
