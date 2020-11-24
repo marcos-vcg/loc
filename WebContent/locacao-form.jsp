@@ -44,7 +44,7 @@
 				
 				<br>
 
-				<table class="table table-bordered" style="text-align:center;">
+				<table class="table table-bordered" style="text-align:center;" id="tblLocacoes">
 					<thead>
 						<tr>
 							<th>Id</th>
@@ -63,7 +63,7 @@
 								<td><c:out value="${locacao.filme.titulo}"/></td>
 								<td><c:out value="${locacao.locacao}"/></td>
 								<td><c:out value="${locacao.devolucao}"/></td>
-								<td id="<c:out value="${locacao.id}" />" value="situacao(this)">
+								<td id="<c:out value="${locacao.id}" />" onChange="situacao(this)"></td>
 								<td>
 									<a href="locacao?action=edit&id=<c:out value='${locacao.id}'/>" class="botao-exclui" class="btn btn-warning" type="">
 										<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-clockwise" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -79,4 +79,18 @@
 			</div>
 		</div>
 	</body>
+	<script type="text/javascript">
+		// Acessa a tabela:
+		var minhaTabela = document.getElementById('tblLocacoes');
+	
+		// Acessa o primeiro tbody da tabela:
+		var tBody = minhaTabela.tBodies[0];
+	
+		// Acessa cada linha da tabela:
+		for (i = 0; i < tBody.rows.length; i++) {
+	
+		    // Define o valor célula situação (cells[4]) de cada linha (rows[i]) da tabela:
+		    tBody.rows[i].cells[4].innerHTML = situacao;
+		}
+	</script>
 </html>
