@@ -19,7 +19,6 @@
 					<li><a href="<%=request.getContextPath()%>/categoria" class="nav-link">Categorias</a></li>
 					<li><a href="<%=request.getContextPath()%>/filme" class="nav-link">Filmes</a></li>
 					<li><a href="<%=request.getContextPath()%>/cliente" class="nav-link">Clientes</a></li>
-					<li><a href="<%=request.getContextPath()%>/dependente" class="nav-link">Dependentes</a></li>
 					<li><a href="<%=request.getContextPath()%>/locacao" class="nav-link">Locações</a></li>
 				</ul>				
 			</nav>

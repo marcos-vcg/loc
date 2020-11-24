@@ -11,87 +11,67 @@
 		<link rel="icon" href="imagens/favicon.png">
 		
 	</head>
-<body>
-
-	<header>
-		<nav class="navbar navbar-expand-md navbar-dark"
-			style="background-color: blue">
-			<div>
-				<a href="http://localhost:8080/loc" class="navbar-brand"> Locadora Digital</a>
-			</div>
-
-			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/genero" class="nav-link">Generos</a></li>
-			</ul>
-			
-			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/categoria" class="nav-link">Categorias</a></li>
-			</ul>
-			
-			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/filme" class="nav-link">Filmes</a></li>
-			</ul>
-			
-			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/cliente" class="nav-link">Clientes</a></li>
-			</ul>
-			
-			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/dependente" class="nav-link">Dependentes</a></li>
-			</ul>
-			
-			<ul class="navbar-nav">
-				<li><a href="<%=request.getContextPath()%>/locacao" class="nav-link">Locações</a></li>
-			</ul>
-			
-		</nav>
-	</header>
-	<br>
-
-	<div class="row">
-		
-		<div class="container">
-			<h3 class="text-center">Lista de Categorias</h3>
-			<hr>
-			<div class="container text-left">
-
-				<a href="<%=request.getContextPath()%>/categoria-form.jsp" class="btn btn-success">Nova Categoria</a>
-			</div>
-			<br>
-			<table class="table table-bordered">
-				<thead>
-					<tr>
-						<th>Id</th>
-						<th>Categoria</th>
-						<th>Preço</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-				
-					<c:forEach var="categoria" items="${categorias}">
-
-						<tr>
-							<td><c:out value="${categoria.id}" /></td>
-				            <td><c:out value="${categoria.nome}"/></td>
-				            <td><c:out value="${categoria.preco}"/></td>
-							
-							<td>
-								<a href="categoria?action=edit&id=<c:out value='${categoria.id}' />" class="btn btn-warning"><img alt="Imagem não encontrada" src="imagens/edit.png"></a>
-									&nbsp;&nbsp;&nbsp; 
-								<a href="categoria?action=delete&id=<c:out value='${categoria.id}' />" class="btn btn-danger" type=""><img alt="Imagem não encontrada" src="imagens/delete.png"></a>
-								<form method="post" action="categoria">
-									<input type="hidden" name="id" value="<c:out value='${categoria.id}' />" />
-								</form> 
-							</td>
-						</tr>
-					</c:forEach>
-					
-				</tbody>
-
-			</table>
-		</div>
-	</div>
 	
-</body>
+	<body>
+		<header>
+			<nav class="navbar navbar-expand-md navbar-dark" style="background-color: blue">
+				<a href="http://localhost:8080/loc" class="navbar-brand"> Locadora Digital</a>
+				<ul class="navbar-nav">
+					<li><a href="<%=request.getContextPath()%>/genero" class="nav-link">Generos</a></li>
+					<li><a href="<%=request.getContextPath()%>/categoria" class="nav-link">Categorias</a></li>
+					<li><a href="<%=request.getContextPath()%>/filme" class="nav-link">Filmes</a></li>
+					<li><a href="<%=request.getContextPath()%>/cliente" class="nav-link">Clientes</a></li>
+					<li><a href="<%=request.getContextPath()%>/locacao" class="nav-link">Locações</a></li>
+				</ul>				
+			</nav>
+		</header>
+		
+		<br>
+	
+		<div class="row">
+			
+			<div class="container">
+				<h3 class="text-center">Lista de Categorias</h3>
+				<hr>
+				<div class="container text-left">
+	
+					<a href="<%=request.getContextPath()%>/categoria-form.jsp" class="btn btn-success">Nova Categoria</a>
+				</div>
+				<br>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Categoria</th>
+							<th>Preço</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<c:forEach var="categoria" items="${categorias}">
+	
+							<tr>
+								<td><c:out value="${categoria.id}" /></td>
+					            <td><c:out value="${categoria.nome}"/></td>
+					            <td><c:out value="${categoria.preco}"/></td>
+								
+								<td>
+									<a href="categoria?action=edit&id=<c:out value='${categoria.id}' />" class="btn btn-warning"><img alt="Imagem não encontrada" src="imagens/edit.png"></a>
+										&nbsp;&nbsp;&nbsp; 
+									<a href="categoria?action=delete&id=<c:out value='${categoria.id}' />" class="btn btn-danger" type=""><img alt="Imagem não encontrada" src="imagens/delete.png"></a>
+									<form method="post" action="categoria">
+										<input type="hidden" name="id" value="<c:out value='${categoria.id}' />" />
+									</form> 
+								</td>
+							</tr>
+						</c:forEach>
+						
+					</tbody>
+	
+				</table>
+			</div>
+		</div>
+		
+	</body>
 </html>

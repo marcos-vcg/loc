@@ -79,18 +79,4 @@
 			</div>
 		</div>
 	</body>
-	<script type="text/javascript">
-		// Acessa a tabela:
-		var minhaTabela = document.getElementById('tblLocacoes');
-	
-		// Acessa o primeiro tbody da tabela:
-		var tBody = minhaTabela.tBodies[0];
-	
-		// Acessa cada linha da tabela:
-		for (i = 0; i < tBody.rows.length; i++) {
-	
-		    // Define o valor célula situação (cells[4]) de cada linha (rows[i]) da tabela:
-		    tBody.rows[i].cells[4].innerHTML = situacao;
-		}
-	</script>
 </html>

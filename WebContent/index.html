@@ -2,35 +2,42 @@
 <html lang="pt-br">
 	<head>
 		<meta charset="utf-8">
-		<title>Locadora Digital</title>
-		<link rel="icon" href="imagens/favicon.png">
+		<title>Locadora Digital</title>		
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="style.css">
+		<meta charset="utf-8">
+		<link rel="icon" href="imagens/favicon.png">
+		<script type="text/javascript" src="js/locacao.js" DEFER="DEFER"></script>
 	</head>
+	
 	<body>
-		<img alt="" src="imagens/locadora.png">
-		<h1>Locadora Digital</h1>
+		<header>
+			<nav class="navbar navbar-expand-md navbar-dark" style="background-color: blue">
+				<a href="http://localhost:8080/loc" class="navbar-brand"> Locadora Digital</a>
+				<ul class="navbar-nav">
+					<li><a href="genero" class="nav-link">Generos</a></li>
+					<li><a href="categoria" class="nav-link">Categorias</a></li>
+					<li><a href="filme" class="nav-link">Filmes</a></li>
+					<li><a href="cliente" class="nav-link">Clientes</a></li>
+					<li><a href="locacao" class="nav-link">Locações</a></li>
+				</ul>				
+			</nav>
+		</header>
 		
+		<br>
 		
-		<table>
-			<tr>
-				<td><a href="main" class="Botao1">Consulta</a></td>
-				<td><a href="locacaoServlet" class="Botao1">Locação</a></td>
-			</tr>
-			<tr></tr>
-			<tr><td><a href="generoServlet" class="Botao2">Genero</a></td></tr>
-			<tr></tr>
-			<tr><td><a href="categoria" class="Botao2">Categoria</a></td></tr>
-			<tr></tr>
-			<tr><td><a href="filme" class="Botao2">Filme</a></td></tr>
-			<tr></tr>
-			<tr><td><a href="dependente" class="Botao2">Dependente</a></td></tr>
-			<tr></tr>
-			<tr><td><a href="cliente" class="Botao2">Cliente</a></td></tr>
-			<tr></tr>
-			<tr><td><a href="locacao" class="Botao2">Locacao</a></td></tr>
-		</table>
-		
-		
-		
+		<div class="row">
+			<div class="container">	
+				<h1>Locadora Digital</h1>
+				
+				<h3 class="text-center">Seja Bem Vindo</h3>
+				
+				<hr>
+				
+				<div class="container text-center">
+					<img class="text-center" alt="" src="imagens/locadora.png" >
+				</div>		
+			</div>
+		</div>
 	</body>
 </html>
