@@ -37,7 +37,7 @@
 				
 				<div class="navbar">	
 								<!-- Botão para acionar modal -->
-					<a href="" class="btn btn-success" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo" onclick='console.log("Clicou")' >Nova Locação</a>
+					<a href="" class="btn btn-success" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo" onclick="return temAtraso()" >Nova Locação</a>
 					<form class="form-inline" action="locacao">
 						<input class="form-control" type="text" name="txtBusca">
 						<input type="submit" value="search" class="btn btn-outline-success" name="action">

@@ -4,6 +4,9 @@ var minhaTabela = document.getElementById('tblLocacoes');
 // Acessa o primeiro tbody da tabela:
 var tBody = minhaTabela.tBodies[0];
 
+// Armazena se tem algum filme em atraso
+var algumAtrasado = false;
+
 // Acessa cada linha da tabela:
 for (i = 0; i < tBody.rows.length; i++) {
 
@@ -29,6 +32,7 @@ for (i = 0; i < tBody.rows.length; i++) {
 		situacao = "Devolvido";
 	} else if (diasPassados > prazo){
 		situacao = "Atrasado";
+		algumAtrasado = true;
 	} else {
 		situacao = "No Prazo";
 	}
@@ -39,7 +43,13 @@ for (i = 0; i < tBody.rows.length; i++) {
 }
 
 
-
+function temAtraso(){
+	if(algumAtrasado){
+		alert("Possui Filme Atrasado");
+		preventDefault();
+	}
+	
+}
 
 
 
