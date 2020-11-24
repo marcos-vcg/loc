@@ -175,7 +175,7 @@ public class LocacaoServlet extends HttpServlet {
 		}
 		
 		if(!atrasado) {
-			locacaoDao.inserir(locacao);
+			locacaoDao.insert(locacao);
 			System.out.println("Nova Locação Inserida!");
 		} else {
 			System.out.println("Locação não Inserida, Filmes em atraso!");
@@ -237,9 +237,9 @@ public class LocacaoServlet extends HttpServlet {
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
 		int id = Integer.parseInt(request.getParameter("id"));
-		Locacao locacao = locacaoDao.busca(id);
+		Locacao locacao = locacaoDao.select(id);
 		locacao.setDevolucao(new Date());
-		locacaoDao.editar(locacao);
+		locacaoDao.update(locacao);
 		
 		System.out.println("Filme Devolvido!");
 		

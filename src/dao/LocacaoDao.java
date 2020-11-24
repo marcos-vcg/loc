@@ -20,10 +20,13 @@ public class LocacaoDao {
 		this.tabela = "locacao";
 	}
 	
-	public Locacao busca(int id) {
+	public Locacao select(int id) {
 		try {
-			String SQL = "SELECT * FROM " + tabela + " WHERE id = '" + id + "'";
+			String SQL = "SELECT * FROM " + tabela + " WHERE id = ?";
 			java.sql.PreparedStatement ps = datasource.getConnection().prepareStatement(SQL);
+			
+			ps.setInt(1, id);
+			
 			ResultSet rs = ps.executeQuery();
 			
 			Locacao locacao = new Locacao();
@@ -51,8 +54,11 @@ public class LocacaoDao {
 	
 	public ArrayList<Locacao> filmesDoCLiente(int id){
 		try {
-			String SQL = "SELECT * FROM " + tabela + " WHERE cliente = '" + id + "' ORDER BY aluguel";
+			String SQL = "SELECT * FROM " + tabela + " WHERE cliente = ? ORDER BY aluguel";
 			java.sql.PreparedStatement ps = datasource.getConnection().prepareStatement(SQL);
+			
+			ps.setInt(1, id);
+			
 			ResultSet rs = ps.executeQuery();
 			
 			ArrayList<Locacao> lista = new ArrayList<Locacao>();
@@ -78,10 +84,11 @@ public class LocacaoDao {
 		return null;
 	}
 	
-	public ArrayList<Locacao> readAll(){
+	public ArrayList<Locacao> selectAll(){
 		try {
 			String SQL = "SELECT * FROM " + tabela + " ORDER BY aluguel";
 			java.sql.PreparedStatement ps = datasource.getConnection().prepareStatement(SQL);
+			
 			ResultSet rs = ps.executeQuery();
 			
 			ArrayList<Locacao> lista = new ArrayList<Locacao>();
@@ -108,7 +115,7 @@ public class LocacaoDao {
 	}
 	
 	
-	public void inserir(Locacao l) {
+	public void insert(Locacao l) {
 		try {
 			
 			String SQL = "INSERT INTO " + tabela + " (cliente, filme, aluguel) VALUES (?,?,?)";
@@ -129,8 +136,12 @@ public class LocacaoDao {
 	public int quantosAlugados(int id){
 		try {
 			
-			String SQL = "SELECT COUNT(*) FROM " + tabela + " WHERE filme = '" + id + "' AND devolucao = null ;";
+			String SQL = "SELECT COUNT(*) FROM " + tabela + " WHERE filme = ? AND devolucao = null ;";
 			java.sql.PreparedStatement ps = datasource.getConnection().prepareStatement(SQL);
+			
+			ps.setInt(1, id);
+			
+			
 			ResultSet rs = ps.executeQuery();
 			
 			int quantidade;
@@ -150,7 +161,7 @@ public class LocacaoDao {
 	}
 	
 	
-	public void editar(Locacao l) {
+	public void update(Locacao l) {
 		try {
 			
 			String SQL = "UPDATE " + tabela + " SET devolucao = ? WHERE id = ?;" ;			// id é int, não colocar aspassimples
@@ -167,12 +178,15 @@ public class LocacaoDao {
 		}
 	}
 	
-	public void apagar(Integer id) {
+	public void delete(Integer id) {
 		try {
 			
-			String SQL = "DELETE FROM " + tabela + " WHERE id = " + id + ";" ;			// id é int, não colocar aspassimples
+			String SQL = "DELETE FROM " + tabela + " WHERE id = ?;" ;			
 			java.sql.PreparedStatement ps = datasource.getConnection().prepareStatement(SQL);
-			ps.executeUpdate(SQL);												// Usado para fazer qualquer alteração. Não tem nenhum retorno
+			
+			ps.setInt(1, id);
+			
+			ps.executeUpdate();												// Usado para fazer qualquer alteração. Não tem nenhum retorno
 			ps.close();
 			
 		} catch (Exception e) {
