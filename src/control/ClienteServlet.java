@@ -1,16 +1,20 @@
 package control;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
@@ -31,6 +35,7 @@ import dao.DependenteDao;
 /**
  * Servlet implementation class ClienteServlet
  */
+@MultipartConfig
 @WebServlet(name="ClienteServlet", urlPatterns = {"/cliente"})
 public class ClienteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -131,8 +136,12 @@ public class ClienteServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String nascimento = request.getParameter("nascimento");
 		String endereco = request.getParameter("endereco");
-		//byte[] imagem = request.getParameter("imagem");
 		
+		
+		//String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
+		Part filePart = request.getPart("imagem");
+	    InputStream fileContent = filePart.getInputStream();
+	    byte[] imagem = fileContent.readAllBytes();
 			
 		Cliente cliente = new Cliente();
 		cliente.setNome(nome);
@@ -141,7 +150,7 @@ public class ClienteServlet extends HttpServlet {
 		cliente.setEmail(email);
 		cliente.setNascimento(nascimento);
 		cliente.setEndereco(endereco);
-		//cliente.setImagem(imagem);
+		cliente.setImagem(imagem);
 		
 		clienteDao.insert(cliente);
 		
@@ -150,55 +159,45 @@ public class ClienteServlet extends HttpServlet {
 		try {
 			//Recebe o JSON em uma String e a armazena em um Array JSON
 			String jsonString = request.getParameter("dependentes");
-			JSONArray jsonArray = new JSONArray(jsonString);
 			
-			// Percorre o Array pegando os Objetos um a um.
-			for(Object obj: jsonArray) {	
+			
+			// Verifica se existe alguma informação no JSON antes de tentar 
+			if(jsonString.length()>0) {
+				JSONArray jsonArray = new JSONArray(jsonString);
+
+				// Percorre o Array pegando os Objetos um a um.
+				for(Object obj: jsonArray) {	
+					
+					// Pega um dos Objetos JSON
+					JSONObject jsonObect = (JSONObject) obj;
+					
+					// Pega os valores dos seus campos
+					String jNome = jsonObect.get("nomeDep").toString();
+					String jGrau = jsonObect.get("grauDep").toString();
+					
+					// Cria um Objeto JAVA seta seus atributos e Insere no BD
+					Dependente dependente = new Dependente();
+					dependente.setNome(jNome);
+					dependente.setGrau(Grau.valueOf(jGrau));
+					dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
+					
+					// Pega a quantidade de dependentes
+					int quantidadeDependentes = dependenteDao.selectAllOf(clienteDao.selectLast()).size();
+					int limiteDependentes = 3;
+					
+					// Verifica se a quantidade é menor do que o limite para poder inserir mais um
+					if(quantidadeDependentes < limiteDependentes) {
+						dependenteDao.inserir(dependente);
+						System.out.println("Dependente Inserido no BD");
+					}	
+				}
 				
-				// Pega um dos Objetos JSON
-				JSONObject jsonObect = (JSONObject) obj;
-				
-				// Pega os valores dos seus campos
-				String jNome = jsonObect.get("nomeDep").toString();
-				String jGrau = jsonObect.get("grauDep").toString();
-				
-				// Cria um Objeto JAVA seta seus atributos e Insere no BD
-				Dependente dependente = new Dependente();
-				dependente.setNome(jNome);
-				dependente.setGrau(Grau.valueOf(jGrau));
-				dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
-				
-				//dependenteDao.selectAllOf();
-				
-				int quantidade = dependenteDao.selectAllOf(clienteDao.selectLast()).size();
-				if(quantidade < 3) {
-					dependenteDao.inserir(dependente);
-					System.out.println("Dependente Inserido no BD");
-				}	
-			}		
+			}
 		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 			
-				
-		/* Segunda forma com a validacao do servidor
-		JSONParser parserDependentes = new JSONParser(request.getParameter("dependentes"));
-		JSONArray jDependentes = (JSONArray) parserDependentes.parse();
-			
-		// Percorre a lista ate 3 dependentes, seta os atributos e adiciona ao Banco de Dados
-		for(int i=0; i<3; i++) {
-			
-			JSONObject jDependente = (JSONObject) jDependentes.get(i);
-			Dependente dependente = new Dependente();
-			dependente.setNome(jDependente.getString("nome"));
-			dependente.setGrau(Grau.valueOf(jDependente.get("grau").toString()));
-			dependente.setTitular(clienteDao.select(clienteDao.selectLast()));
-			
-			dependenteDao.inserir(dependente);
-		}
-		*/
-		
 		response.sendRedirect("cliente");
 	}	
 	
@@ -252,7 +251,11 @@ public class ClienteServlet extends HttpServlet {
 		String email = request.getParameter("email");
 		String nascimento = request.getParameter("nascimento");
 		String endereco = request.getParameter("endereco");
-		//byte[] imagem = request.getParameter("imagem");
+
+		Part filePart = request.getPart("imagem");
+	    InputStream fileContent = filePart.getInputStream();
+	    byte[] imagem = fileContent.readAllBytes();
+		
 		
 		
 		Cliente cliente = new Cliente();
@@ -263,7 +266,14 @@ public class ClienteServlet extends HttpServlet {
 		cliente.setEmail(email);
 		cliente.setNascimento(nascimento);
 		cliente.setEndereco(endereco);
-		//cliente.setImagem(imagem);
+		
+		// Testa se foi enviado uma nova imagem, caso contrário seta a imagem com a mesma já cadastrada
+		if(request.getPart("imagem").getSize()>0) {
+			cliente.setImagem(imagem);
+		} else {
+			cliente.setImagem(clienteDao.select(cliente.getId()).getImagem());
+		}
+		
 		
 		clienteDao.update(cliente);
 		

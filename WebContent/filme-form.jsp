@@ -38,6 +38,12 @@
 						<form action="filme" method="post">
 							<input type="hidden" name="action" value="update" />
 							<input type="hidden" name="id" value="<c:out value='${filme.id}' />" />
+					
+						<div class="container text-right">
+							<img id="mostrarImagem" alt="Foto de Capa" src="/loc/imagem?action=filme&id=<c:out value="${filme.id}"/>" style="width: 100px; height: 130px"  /> 					
+							<br>
+							<input name="imagem" id="imagem" type="file" accept="image/*"  onchange="document.getElementById('mostrarImagem').src = window.URL.createObjectURL(this.files[0])">
+						</div>	
 					</c:if>
 					
 					
@@ -48,6 +54,12 @@
 					
 						<form action="filme" method="post">
 							<input type="hidden" name="action" value="insert" />
+					
+						<div class="container text-right">
+							<img id="mostrarImagem" alt="Foto de Capa" src="imagens/perfil.jpg" style="width: 100px; height: 130px"  /> 					
+							<br>
+							<input name="imagem" id="imagem" type="file" accept="image/*"  onchange="document.getElementById('mostrarImagem').src = window.URL.createObjectURL(this.files[0])">
+						</div>						
 					</c:if>
 	
 						<fieldset class="form-group">

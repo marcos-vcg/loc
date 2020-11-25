@@ -38,10 +38,16 @@
 						<caption>
 							<h2>Editar Cliente</h2>
 						</caption>
-							<form action="cliente" method="post">
+							<form action="cliente" method="post" enctype="multipart/form-data">
 								<fieldset class="form-group">
 								<input type="hidden" name="action" value="update" />
 								<input type="hidden" name="id" value="<c:out value='${cliente.id}' />" />
+							
+							<div class="container text-right">
+									<img id="mostrarImagem" alt="Foto de Capa" src="/loc/imagem?action=cliente&id=<c:out value="${cliente.id}"/>" style="width: 100px; height: 130px"  /> 					
+									<br>
+								<input name="imagem" id="imagem" type="file" accept="image/*"  onchange="document.getElementById('mostrarImagem').src = window.URL.createObjectURL(this.files[0])">
+							</div>	
 					</c:if>
 					
 					
@@ -49,17 +55,19 @@
 						<caption>
 							<h2>Novo Cliente</h2>
 						</caption>
-							<form action="cliente" method="post">
+							<form action="cliente" method="post" enctype="multipart/form-data">
 								<fieldset class="form-group">
 								<input type="hidden" name="action" value="insert" />
+								
+							<div class="container text-right">
+								<img id="mostrarImagem" alt="Foto de Capa" src="imagens/perfil.jpg" style="width: 100px; height: 130px"  /> 					
+								<br>
+								<input name="imagem" id="imagem" type="file" accept="image/*"  onchange="document.getElementById('mostrarImagem').src = window.URL.createObjectURL(this.files[0])">
+							</div>		
 					</c:if>
 	
 	
-						<div class="container text-right">
-							<img id="mostrarImagem" alt="Foto de Capa" src="imagens/perfil.jpg" style="width: 100px; height: 130px" /> 					
-							<br>
-							<input name="imagem" id="imagem" type="file" accept="image/*" onchange="document.getElementById('mostrarImagem').src = window.URL.createObjectURL(this.files[0])">
-						</div>
+						
 						
 						<label>Nome*</label> 
 						<input name="nome" type="text" maxlength="40" placeholder="MeuNome..." value="<c:out value='${cliente.nome}' />" class="form-control" required="required">

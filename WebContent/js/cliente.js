@@ -1,3 +1,9 @@
+window.onload = function() {
+	//
+};
+
+
+
 // Linha selecionada para edição começa nula
 var selectedRow = null;
 
@@ -6,6 +12,10 @@ let dependentes = [ ];
 
 // Array para enviar para a Servlet poder primeiro editar e excluir e por fim editar (Evitar adicionar um quarto dependente antes de excluir o anterior)
 let dependentesInvertido = [ ];
+
+// Inicializar o array vazio caso não cadastre ninguem.
+var myJSON = JSON.stringify(dependentesInvertido);
+document.getElementById("dependentes").value = myJSON;
 
 
 

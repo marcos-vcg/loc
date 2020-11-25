@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import bean.Categoria;
 import bean.Cliente;
@@ -128,8 +130,11 @@ public class FilmeServlet extends HttpServlet {
 		String sinopse = request.getParameter("sinopse");
 		String duracao = request.getParameter("duracao");
 		String lancamento = request.getParameter("lancamento");
-		//byte[] imagem = Byte.parseByte(request.getParameter("imagem")) ;
 		Categoria categoria = categoriaDao.select(Integer.parseInt(request.getParameter("categoria")));
+		
+		Part filePart = request.getPart("imagem");
+	    InputStream fileContent = filePart.getInputStream();
+	    byte[] imagem = fileContent.readAllBytes();
 		
 		
 		Filme filme = new Filme();
@@ -139,7 +144,7 @@ public class FilmeServlet extends HttpServlet {
 		filme.setSinopse(sinopse);
 		filme.setDuracao(duracao);
 		filme.setLancamento(lancamento);
-		//filme.setImagem(imagem);
+		filme.setImagem(imagem);
 		filme.setCategoria(categoria);
 		
 		
@@ -194,8 +199,11 @@ public class FilmeServlet extends HttpServlet {
 		String sinopse = request.getParameter("sinopse");
 		String duracao = request.getParameter("duracao");
 		String lancamento = request.getParameter("lancamento");
-		//byte[] imagem = Byte.parseByte(request.getParameter("imagem")) ;
 		Categoria categoria = categoriaDao.select(Integer.parseInt(request.getParameter("categoria")));
+		
+		Part filePart = request.getPart("imagem");
+	    InputStream fileContent = filePart.getInputStream();
+	    byte[] imagem = fileContent.readAllBytes();
 		
 		
 		Filme filme = new Filme();
@@ -206,8 +214,16 @@ public class FilmeServlet extends HttpServlet {
 		filme.setSinopse(sinopse);
 		filme.setDuracao(duracao);
 		filme.setLancamento(lancamento);
-		//filme.setImagem(imagem);
+		filme.setImagem(imagem);
 		filme.setCategoria(categoria);
+		
+		
+		// Testa se foi enviado uma nova imagem, caso contrário seta a imagem com a mesma já cadastrada
+		if(request.getPart("imagem").getSize()>0) {
+			filme.setImagem(imagem);
+		} else {
+			filme.setImagem(filmeDao.select(filme.getId()).getImagem());
+		}
 		
 		
 		filmeDao.update(filme);
