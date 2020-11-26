@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,8 @@ import dao.GeneroDao;
 /**
  * Servlet implementation class FilmeServlet
  */
+
+@MultipartConfig
 @WebServlet(name="FilmeServlet", urlPatterns = {"/filme"})
 public class FilmeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

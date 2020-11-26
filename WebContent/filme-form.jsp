@@ -26,7 +26,7 @@
 		
 		<br>
 		
-		<div class="container col-md-5">
+		<div class="container col-md-8">
 			<div class="card">
 				<div class="card-body">
 					
@@ -35,7 +35,7 @@
 							<h2>Editar Filme</h2>
 						</caption>
 					
-						<form action="filme" method="post">
+						<form action="filme" method="post" enctype="multipart/form-data">
 							<input type="hidden" name="action" value="update" />
 							<input type="hidden" name="id" value="<c:out value='${filme.id}' />" />
 					
@@ -52,7 +52,7 @@
 							<h2>Novo Filme</h2>
 						</caption>
 					
-						<form action="filme" method="post">
+						<form action="filme" method="post" enctype="multipart/form-data">
 							<input type="hidden" name="action" value="insert" />
 					
 						<div class="container text-right">
@@ -108,16 +108,14 @@
 							<textarea name="sinopse" rows="" cols="" class="form-control"><c:out value='${filme.sinopse}' /></textarea>
 						</fieldset>
 						
-						<fieldset class="form-group">
-							<label for="imagem">Imagem</label>
-							<br>
-		  					<input type="file" id="imagem" name="imagem" accept="image/*" onchange="">
-		  					<br>
-		  					<img id="img" alt="Foto de Capa" src="<c:out value='${filme.imagem}' />" style="width: 200px" />
-						</fieldset>
+						<br>
+						<br>
 						
-						
-						<button type="submit" class="btn btn-success">Save</button>
+						<div class="container text-right">
+							<a href="filme" class="btn btn-danger">Cancel</a>
+							&nbsp;&nbsp;
+							<button type="submit" class="btn btn-success">Save</button>
+						</div>
 					</form>
 				</div>
 			</div>
